@@ -1,9 +1,11 @@
 // Modules
 const express = require('express'),
-morgan = require('morgan');
+morgan = require('morgan'),
+uuid = require('uuid');
 
 const app = express();
 
+// API Data
 const movies = [
     {
         id: 1,   
@@ -145,31 +147,216 @@ const movies = [
         imdbLink: 'https://www.imdb.com/title/tt0110357/',
         name: 'The Lion King'
     }
+],
+directors = [
+    {
+        bio: 
+            `Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla. 
+            Donec pellentesque vel velit quis semper. 
+            Duis rutrum purus justo. 
+            Maecenas sit amet felis vel orci euismod dignissim vel eget nunc. Quisque ornare, velit eu volutpat vulputate, nisi felis pharetra nisi, sit amet dignissim nibh nibh rutrum nisl. 
+            Ut ac libero suscipit, ultrices ante non, interdum erat. 
+            Duis faucibus dictum sodales. 
+            Duis dignissim mauris nec libero luctus imperdiet. 
+            Mauris venenatis orci eget urna cursus porttitor. 
+            Maecenas convallis blandit nulla, eget commodo libero tincidunt eu.
+            `, 
+        birth_year: 1970, 
+        death_year: 'N/A',
+        name: 'James Cameron',
+    },
+    {
+        bio: 
+            `Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla. 
+            Donec pellentesque vel velit quis semper. 
+            Duis rutrum purus justo. 
+            Maecenas sit amet felis vel orci euismod dignissim vel eget nunc. Quisque ornare, velit eu volutpat vulputate, nisi felis pharetra nisi, sit amet dignissim nibh nibh rutrum nisl. 
+            Ut ac libero suscipit, ultrices ante non, interdum erat. 
+            Duis faucibus dictum sodales. 
+            Duis dignissim mauris nec libero luctus imperdiet. 
+            Mauris venenatis orci eget urna cursus porttitor. 
+            Maecenas convallis blandit nulla, eget commodo libero tincidunt eu.
+            `, 
+        birth_year: 1980, 
+        death_year: 'N/A',
+        name: 'Jason Moore'
+    },
+    {
+        bio: 
+            `Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla. 
+            Donec pellentesque vel velit quis semper. 
+            Duis rutrum purus justo. 
+            Maecenas sit amet felis vel orci euismod dignissim vel eget nunc. Quisque ornare, velit eu volutpat vulputate, nisi felis pharetra nisi, sit amet dignissim nibh nibh rutrum nisl. 
+            Ut ac libero suscipit, ultrices ante non, interdum erat. 
+            Duis faucibus dictum sodales. 
+            Duis dignissim mauris nec libero luctus imperdiet. 
+            Mauris venenatis orci eget urna cursus porttitor. 
+            Maecenas convallis blandit nulla, eget commodo libero tincidunt eu.
+            `, 
+        birth_year: 1955, 
+        death_year: 'N/A',
+        name: 'Alex Proyas'
+    }
+],
+genres = [
+    {
+        name: 'Action',
+        description: 'Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla.'
+    },
+    {
+        name: 'Adventure',
+        description: 'Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla.'
+    },
+    {
+        name: 'Comedy',
+        description: 'Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla.'
+    },
+    {
+        name: 'Drama',
+        description: 'Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla.'
+    },
+    {
+        name: 'Horror',
+        description: 'Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla.'
+    },
+    {
+        name: 'Romance',
+        description: 'Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla.'
+    },
+    {
+        name: 'Thriller',
+        description: 'Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla.'
+    },
 ];
+const users = [];
 
 // Middlewares
+app.use(express.json());
 app.use(morgan('common')); // log requests
 app.use(express.static('public')); // serve static files in public folder
 // Error handler
 app.use((err, req, res, next) => {
-    console.log(err.stack);
     res.sendStatus(500).send('An error has ocurred!');
 });
 
 // Routes
+
+// Movies
 app.get('/',(req, res) => {
     res.send('Welcome to the Movies API');
 });
 
-app.get('/movies',(req, res) => {
-    res.json(movies);
+// Get a list of all movies or a single movie by name
+app.get('/movies/:name?',(req, res) => {
+    // If name parameter exists return a single movie that matches that name
+    // Otherwise return full list of movies
+    req.params.name 
+    ?  res.json(movies.find((movie) => {
+        return movie.name.toLowerCase().replace(/\s/,'') === req.params.name.toLowerCase().replace(/\s/,'');
+    }))
+    : res.json(movies);    
 });
 
-app.get('/movies/:id',(req, res) => {
-    // Filter through movies array and find movie requested by id
-    res.json(movies.filter((movie) => {
-        return movie.id == req.params.id;
-    })[0]);
+// Get description about all genres or a single genre by name
+app.get('/genres/:name?',(req, res) => {
+    // If name parameter exists return a single genre that matches that name
+    // Otherwise return full list of genres
+    req.params.name 
+    ?  res.json(genres.find((genre) => {
+        return genre.name.toLowerCase().replace(/\s/,'') === req.params.name.toLowerCase().replace(/\s/,'');
+    }))
+    : res.json(genres);    
+});
+
+// Get info about all directors or a single director by name
+app.get('/directors/:name?',(req, res) => {
+    // If name parameter exists return a single director that matches that name
+    // Otherwise return full list of directors
+    req.params.name 
+    ?  res.json(directors.find((director) => {
+        return director.name.toLowerCase().replace(/\s/,'') === req.params.name.toLowerCase().replace(/\s/,'');
+    }))
+    : res.json(directors);    
+});
+
+// Users
+
+// Register a new user
+app.post('/users', (req, res) => {
+    // Check if both email and username were passed in request
+    if (!req.body.email || !req.body.username) {
+        res.status(400).send('Please include an email and a username to register a new user.');        
+    }
+
+    // Check if user with that email already exists
+    const existingUser = users.find((user) => user.email === req.body.email);
+    if (existingUser) res.status(400).send('Sorry, a user with that email address already exists. Please use another email address.');
+    
+    const newUser = req.body
+    newUser['id'] = uuid.v4(); // create unique user id
+    newUser['favorites'] = [];
+    users.push(newUser);
+    res.status(201).send(newUser);
+});
+
+// Deregister a user
+app.delete('/users', (req, res) => {
+    const id = req.body.id;
+    let index; // index of user in users array
+
+    // Check if user exists and find index of user
+    const user = users.find((user,i) => {
+        if (user.id === id) {
+            index = i;
+            return true;
+        }
+    });
+
+    if (!user) res.status(400).send('Sorry, that user doesn\'t exist.');
+    users.splice(index,1);
+    res.status(200).send(`${user.email} has been removed.`);
+});
+
+// Update user's username
+app.patch('/users/:id/username', (req, res) => {
+    const id = req.params.id;   
+    // Check if user exists
+    const user = users.find((user) => user.id === id);
+    if (!user) res.status(400).send('Sorry, that user doesn\'t exist.');     
+    
+    user.username = req.body.username;
+    res.status(201).send(user);
+});
+
+// Add a movie to user's favorites list
+app.patch('/users/:id/favorites', (req, res) => {
+    const id = req.params.id;
+    const movie = req.body.movie;
+    // Check if user exists
+    const user = users.find((user) => user.id === id);
+    if (!user) res.status(400).send('Sorry, that user doesn\'t exist.');
+    // Check if movie is in user's favorites list
+    if (user.favorites.indexOf(movie) > -1) res.status(400).send('That movie is already in your favorites list. Try adding another one.');
+    
+    user.favorites.push(movie); 
+    res.status(201).send(`${movie} has been added.`)
+});
+
+// Remove a movie from user's favorites list
+app.delete('/users/:id/favorites', (req, res) => {
+    const id = req.params.id;
+    const movie = req.body.movie;    
+    // Check if user exists
+    const user = users.find((user) => user.id === id);
+    if (!user) res.status(400).send('Sorry, that user doesn\'t exist.');
+    // Check if movie is in user's favorites list
+    if (user.favorites.indexOf(movie) < 0) res.status(400).send('That movie is not in your favorites list. Try removing another one.');
+    
+    user.favorites.splice(user.favorites.indexOf(movie), 1);
+    res.status(200).send(`${movie} has been removed.`);
 });
 
 app.listen(8080);
