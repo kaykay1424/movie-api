@@ -24,16 +24,10 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>
-                        <p>Get a list of all movies</p>
-                        <p>Get a single movie by "name"</p> 
-                    </td>
-                    <td>
-                        <p>/movies</p> 
-                        <p>/movies/:name</p> 
-                    </td>
+                    <td>Get a list of all movies</td>
+                    <td>/movies </td>
                     <td>GET</td>
-                    <td>name (optional)</td>
+                    <td>N/A</td>
                     <td>N/A</td>
                     <td>
                         <code>
@@ -79,7 +73,17 @@
                                     "name": "I, Robot"
                                 }
                             ]
-                        </code>
+                        </code>                        
+                        <p>Data will be returned in json format</p>
+                    </td>
+                </tr>  
+                <tr>
+                    <td>Get a single movie by name</td>
+                    <td>/movies/:name</td>
+                    <td>GET</td>
+                    <td>name (required)</td>
+                    <td>N/A</td>
+                    <td>
                         <code>
                             {
                                 "id": 1,   
@@ -98,18 +102,12 @@
                         </code>
                         <p>Data will be returned in json format</p>
                     </td>
-                </tr>                
+                </tr>              
                 <tr>
-                    <td>
-                        <p>Get description about all genres</p>
-                        <p>Get description about a single genre by "name"</p>
-                    </td>
-                    <td>
-                        <p>/genres</p> 
-                        <p>/genres/:name</p> 
-                    </td>
+                    <td>Get description about all genres</td>
+                    <td>/genres </td>
                     <td>GET</td>
-                    <td>name (optional)</td>
+                    <td>N/A</td>
                     <td>N/A</td>
                     <td>
                         <code>
@@ -128,22 +126,25 @@
                                 }
                             ]
                         </code>
-                        <p>Data will be returned in json format</p>
+                        <p>Data will be returned in json format</p>                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>Get description about a single genre by "name"</td>
+                    <td>/genres/:name</p> </td>
+                    <td>GET</td>
+                    <td>name (required)</td>
+                    <td>N/A</td>
+                    <td>
                         <p>"Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla."</p>
                         <p>Data will be returned in html format</p>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <p>Get info about all directors</p>
-                        <p>Get info about a single director by name</p>
-                    </td>
-                    <td>
-                        <p>/directors</p>
-                        <p>/directors/:name</p>
-                    </td>
+                    <td>Get info about all directors</td>
+                    <td>/directors</td>
                     <td>GET</td>
-                    <td>name (optional)</td>
+                    <td>N/A</td>
                     <td>N/A</td>
                     <td>
                         <code>
@@ -198,6 +199,16 @@
                                 }
                             ]
                         </code>
+                        <p>Data will be returned in json format</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Get info about a single director by name</td>
+                    <td>/directors/:name</td>
+                    <td>GET</td>
+                    <td>name (required)</td>
+                    <td>N/A</td>
+                    <td>
                         <code>
                             {
                                 bio: 
@@ -251,8 +262,9 @@
                     <td>
                         <code>
                             {
-                                "id": "jifoaefoi-343-fjeifjie",
-                                "username": "name"
+                                "id": jifoaefoi-343-fjeifjie,
+                                "username": "name",
+                                "favorites": ["movie","movie2","movie3"]
                             }
                         </code>
                         <p>Data will be returned in json format</p>
@@ -261,7 +273,7 @@
                 <tr>
                     <td>Update user"s username</td>
                     <td>/users/:id/username</td>
-                    <td>POST</td>
+                    <td>PATCH</td>
                     <td>id (required)</td>
                     <td>
                         <code>{"username": "name"}</code>
@@ -280,9 +292,12 @@
                 </tr>
                 <tr>
                     <td>Add a movie to user"s favorites list</td>
-                    <td>/users/:id/favorites</td>
+                    <td>/users/:id/favorites/:name</td>
                     <td>PATCH</td>
-                    <td>id (required)</td>
+                    <td>
+                        <p>id (required)</p>
+                        <p>name (required)</p>
+                    </td>
                     <td>
                         {"movie": "name"}
                         <p>Data must be in json format</p>
@@ -294,9 +309,12 @@
                 </tr>
                 <tr>
                     <td>Remove a movie from user"s favorites list</td>
-                    <td>/users/:id/favorites</td>
+                    <td>/users/:id/favorites/:name</td>
                     <td>DELETE</td>
-                    <td>id (required)</td>
+                    <td>
+                        <p>id (required)</p>
+                        <p>name (required)</p>
+                    </td>
                     <td>
                         {"movie": "name"}
                         <p>Data must be in json format</p>
@@ -308,9 +326,9 @@
                 </tr>
                 <tr>
                     <td>Deregister a user</td>
-                    <td>/users</td>
+                    <td>/users/:id</td>
                     <td>DELETE</td>
-                    <td>N/A</td>
+                    <td>id (required)</td>
                     <td>
                         {"id": "jifoaefoi-343-fjeifjie"}
                         <p>Data must be in json format</p>
