@@ -249,37 +249,40 @@ app.get('/',(req, res) => {
     res.send('Welcome to the Movies API');
 });
 
-// Get a list of all movies or a single movie by name
-app.get('/movies/:name?',(req, res) => {
-    // If name parameter exists return a single movie that matches that name
-    // Otherwise return full list of movies
-    req.params.name 
-    ?  res.json(movies.find((movie) => {
+// Get a list of all movies by name
+app.get('/movies',(req, res) => { 
+    res.json(movies);    
+});
+
+// Get a single movie by name
+app.get('/movies/:name',(req, res) => {
+    res.json(movies.find((movie) => {
         return movie.name.toLowerCase().replace(/\s/,'') === req.params.name.toLowerCase().replace(/\s/,'');
-    }))
-    : res.json(movies);    
+    }));  
 });
 
-// Get description about all genres or a single genre by name
-app.get('/genres/:name?',(req, res) => {
-    // If name parameter exists return a single genre that matches that name
-    // Otherwise return full list of genres
-    req.params.name 
-    ?  res.json(genres.find((genre) => {
+// Get all genres 
+app.get('/genres',(req, res) => {
+    res.json(genres);    
+});
+
+// Get a single genre by name
+app.get('/genres/:name',(req, res) => {
+    res.json(genres.find((genre) => {
         return genre.name.toLowerCase().replace(/\s/,'') === req.params.name.toLowerCase().replace(/\s/,'');
-    }))
-    : res.json(genres);    
+    }));   
 });
 
-// Get info about all directors or a single director by name
-app.get('/directors/:name?',(req, res) => {
-    // If name parameter exists return a single director that matches that name
-    // Otherwise return full list of directors
-    req.params.name 
-    ?  res.json(directors.find((director) => {
+// Get all directors by name
+app.get('/directors',(req, res) => {
+    res.json(directors);    
+});
+
+// Get a single director by name
+app.get('/directors/:name',(req, res) => {
+    res.json(directors.find((director) => {
         return director.name.toLowerCase().replace(/\s/,'') === req.params.name.toLowerCase().replace(/\s/,'');
-    }))
-    : res.json(directors);    
+    }));   
 });
 
 // Users
@@ -303,7 +306,7 @@ app.post('/users', (req, res) => {
 });
 
 // Deregister a user
-app.delete('/users', (req, res) => {
+app.delete('/users/:id', (req, res) => {
     const id = req.body.id;
     let index; // index of user in users array
 
@@ -332,7 +335,7 @@ app.patch('/users/:id/username', (req, res) => {
 });
 
 // Add a movie to user's favorites list
-app.patch('/users/:id/favorites', (req, res) => {
+app.patch('/users/:id/favorites/:name', (req, res) => {
     const id = req.params.id;
     const movie = req.body.movie;
     // Check if user exists
@@ -346,7 +349,7 @@ app.patch('/users/:id/favorites', (req, res) => {
 });
 
 // Remove a movie from user's favorites list
-app.delete('/users/:id/favorites', (req, res) => {
+app.delete('/users/:id/favorites/:name', (req, res) => {
     const id = req.params.id;
     const movie = req.body.movie;    
     // Check if user exists
