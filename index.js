@@ -1,237 +1,12 @@
 // Modules
-const express = require('express'),
-morgan = require('morgan'),
-uuid = require('uuid');
+const db = require('./db.js'),
+dotenv = require('dotenv'),
+express = require('express'),
+morgan = require('morgan');
+
+dotenv.config({path: __dirname + '/.env'});
 
 const app = express();
-
-// API Data
-const movies = [
-    {
-        id: 1,   
-        description: 'A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.',
-        directors: ['James Cameron'],
-        genres: [
-            'Action',
-            'Adventure', 
-            'Fantasy', 
-            'Sci-Fi'
-        ],
-        image: 'https://m.media-amazon.com/images/M/MV5BMTYwOTEwNjAzMl5BMl5BanBnXkFtZTcwODc5MTUwMw@@._V1_UX182_CR0,0,182,268_AL_.jpg',
-        imdbLink: 'https://www.imdb.com/title/tt0499549/',
-        name: 'Avatar'
-    },
-    {
-        id: 2,   
-        description: 'A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.',
-        directors: ['James Cameron'],
-        genres: [
-            'Drama',
-            'Romance'
-        ],
-        image: 'https://m.media-amazon.com/images/M/MV5BMDdmZGU3NDQtY2E5My00ZTliLWIzOTUtMTY4ZGI1YjdiNjk3XkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_UX182_CR0,0,182,268_AL_.jpg',
-        imdbLink: 'https://www.imdb.com/title/tt0120338/',
-        name: 'Titanic'
-    },
-    {
-        id: 3,   
-        description: 'In 2035, a technophobic cop investigates a crime that may have been perpetrated by a robot, which leads to a larger threat to humanity.',
-        directors: ['Alex Proyas'],
-        genres: [
-            'Action',
-            'Drama',
-            'Sci-Fi',
-            'Thriller'
-        ],
-        image: 'https://m.media-amazon.com/images/M/MV5BNmE1OWI2ZGItMDUyOS00MmU5LWE0MzUtYTQ0YzA1YTE5MGYxXkEyXkFqcGdeQXVyMDM5ODIyNw@@._V1_UY268_CR8,0,182,268_AL_.jpg',
-        imdbLink: 'https://www.imdb.com/title/tt0343818/',
-        name: 'I, Robot'
-    },
-    {
-        id: 4,   
-        description: 'A band director recruits a Harlem street drummer to play at a Southern university.',
-        directors: ['Charles Stone III'],
-        genres: [
-            'Comedy',
-            'Drama',
-            'Romance',
-            'Music'
-        ],
-        image: 'https://m.media-amazon.com/images/M/MV5BNzhhY2Y3NDktM2JiYi00YmY0LWEzOGQtMDc4Yzk3ZWIxOTVmXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_UX182_CR0,0,182,268_AL_.jpg',
-        imdbLink: 'https://www.imdb.com/title/tt0303933/',
-        name: 'Drumline'
-    },
-    {
-        id: 5,   
-        description: 'Four teenagers are sucked into a magical video game, and the only way they can escape is to work together to finish the game.',
-        directors: ['Jake Kasdan'],
-        genres: [
-            'Action',
-            'Adventure',
-            'Comedy',
-            'Fantasy'
-        ],
-        image: 'https://m.media-amazon.com/images/M/MV5BODQ0NDhjYWItYTMxZi00NTk2LWIzNDEtOWZiYWYxZjc2MTgxXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_UX182_CR0,0,182,268_AL_.jpg',
-        imdbLink: 'https://www.imdb.com/title/tt2283362/',
-        name: 'Jumanji: Welcome to the Jungle'
-    },
-    {
-        id: 6,   
-        description: 'After the devastating events of Avengers: Infinity War (2018), the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos\' actions and restore balance to the universe.',
-        directors: [
-            'Anthony Russo',
-            'Joe Russo'
-        ],
-        genres: [
-            'Action', 
-            'Adventure',
-            'Drama',
-            'Sci-Fi'
-        ],
-        image: 'https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_UX182_CR0,0,182,268_AL_.jpg',
-        imdbLink: 'https://www.imdb.com/title/tt4154796/',
-        name: 'Avengers: End Game'
-    },
-    {
-        id: 7,   
-        description: 'The African monarch Akeem learns he has a long-lost son in the United States and must return to America to meet this unexpected heir and build a relationship with his son.',
-        directors: ['Craig Brewer'],
-        genres: ['Comedy'],
-        image: 'https://m.media-amazon.com/images/M/MV5BZTMyY2Q2MDctMDFlMS00MWEzLTk1NmEtNDcxNzg1ZGJlNGU5XkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_UX182_CR0,0,182,268_AL_.jpg',
-        imdbLink: 'https://www.imdb.com/title/tt6802400/',
-        name: 'Coming 2 America'
-    },
-    {
-        id: 8,   
-        description: 'Beca, a freshman at Barden University, is cajoled into joining The Bellas, her school\'s all-girls singing group. Injecting some much needed energy into their repertoire, The Bellas take on their male rivals in a campus competition.',
-        directors: ['Jason Moore'],
-        genres: [
-            'Comedy',
-            'Music',
-            'Romance'
-        ],
-        image: 'https://m.media-amazon.com/images/M/MV5BMTcyMTMzNzE5N15BMl5BanBnXkFtZTcwNzg5NjM5Nw@@._V1_UX182_CR0,0,182,268_AL_.jpg',
-        imdbLink: 'https://www.imdb.com/title/tt1981677/',
-        name: 'Pitch Perfect'
-    },
-    {
-        id: 9,   
-        description: 'A cowboy doll is profoundly threatened and jealous when a new spaceman figure supplants him as top toy in a boy\'s room.',
-        directors: ['John Lasseter'],
-        genres: [
-            'Animation',
-            'Adventure',
-            'Comedy', 
-            'Family',
-            'Fantasy'
-        ],
-        image: 'https://m.media-amazon.com/images/M/MV5BMDU2ZWJlMjktMTRhMy00ZTA5LWEzNDgtYmNmZTEwZTViZWJkXkEyXkFqcGdeQXVyNDQ2OTk4MzI@._V1_UX182_CR0,0,182,268_AL_.jpg',
-        imdbLink: 'https://www.imdb.com/title/tt0114709/',
-        name: 'Toy Story'
-    },
-    {
-        id: 10,   
-        description: 'Lion prince Simba and his father are targeted by his bitter uncle, who wants to ascend the throne himself.',
-        directors: [
-            'Roger Allers', 
-            'Rob Minkoff'
-        ],
-        genres: [
-            'Animation',
-            'Adventure',
-            'Drama',
-            'Family', 
-            'Musical'
-        ],
-        image: 'https://m.media-amazon.com/images/M/MV5BYTYxNGMyZTYtMjE3MS00MzNjLWFjNmYtMDk3N2FmM2JiM2M1XkEyXkFqcGdeQXVyNjY5NDU4NzI@._V1_UX182_CR0,0,182,268_AL_.jpg',
-        imdbLink: 'https://www.imdb.com/title/tt0110357/',
-        name: 'The Lion King'
-    }
-],
-directors = [
-    {
-        bio: 
-            `Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-            Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla. 
-            Donec pellentesque vel velit quis semper. 
-            Duis rutrum purus justo. 
-            Maecenas sit amet felis vel orci euismod dignissim vel eget nunc. Quisque ornare, velit eu volutpat vulputate, nisi felis pharetra nisi, sit amet dignissim nibh nibh rutrum nisl. 
-            Ut ac libero suscipit, ultrices ante non, interdum erat. 
-            Duis faucibus dictum sodales. 
-            Duis dignissim mauris nec libero luctus imperdiet. 
-            Mauris venenatis orci eget urna cursus porttitor. 
-            Maecenas convallis blandit nulla, eget commodo libero tincidunt eu.
-            `, 
-        birth_year: 1970, 
-        death_year: 'N/A',
-        name: 'James Cameron',
-    },
-    {
-        bio: 
-            `Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-            Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla. 
-            Donec pellentesque vel velit quis semper. 
-            Duis rutrum purus justo. 
-            Maecenas sit amet felis vel orci euismod dignissim vel eget nunc. Quisque ornare, velit eu volutpat vulputate, nisi felis pharetra nisi, sit amet dignissim nibh nibh rutrum nisl. 
-            Ut ac libero suscipit, ultrices ante non, interdum erat. 
-            Duis faucibus dictum sodales. 
-            Duis dignissim mauris nec libero luctus imperdiet. 
-            Mauris venenatis orci eget urna cursus porttitor. 
-            Maecenas convallis blandit nulla, eget commodo libero tincidunt eu.
-            `, 
-        birth_year: 1980, 
-        death_year: 'N/A',
-        name: 'Jason Moore'
-    },
-    {
-        bio: 
-            `Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-            Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla. 
-            Donec pellentesque vel velit quis semper. 
-            Duis rutrum purus justo. 
-            Maecenas sit amet felis vel orci euismod dignissim vel eget nunc. Quisque ornare, velit eu volutpat vulputate, nisi felis pharetra nisi, sit amet dignissim nibh nibh rutrum nisl. 
-            Ut ac libero suscipit, ultrices ante non, interdum erat. 
-            Duis faucibus dictum sodales. 
-            Duis dignissim mauris nec libero luctus imperdiet. 
-            Mauris venenatis orci eget urna cursus porttitor. 
-            Maecenas convallis blandit nulla, eget commodo libero tincidunt eu.
-            `, 
-        birth_year: 1955, 
-        death_year: 'N/A',
-        name: 'Alex Proyas'
-    }
-],
-genres = [
-    {
-        name: 'Action',
-        description: 'Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla.'
-    },
-    {
-        name: 'Adventure',
-        description: 'Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla.'
-    },
-    {
-        name: 'Comedy',
-        description: 'Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla.'
-    },
-    {
-        name: 'Drama',
-        description: 'Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla.'
-    },
-    {
-        name: 'Horror',
-        description: 'Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla.'
-    },
-    {
-        name: 'Romance',
-        description: 'Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla.'
-    },
-    {
-        name: 'Thriller',
-        description: 'Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla.'
-    },
-];
-const users = [];
 
 // Middlewares
 app.use(express.json());
@@ -239,127 +14,200 @@ app.use(morgan('common')); // log requests
 app.use(express.static('public')); // serve static files in public folder
 // Error handler
 app.use((err, req, res, next) => {
+    console.log(err.stack);
     res.sendStatus(500).send('An error has ocurred!');
 });
 
 // Routes
 
 // Movies
+
 app.get('/',(req, res) => {
     res.send('Welcome to the Movies API');
 });
 
 // Get a list of all movies by name
-app.get('/movies',(req, res) => { 
-    res.json(movies);    
+app.get('/movies',(req, res) => {
+    db.myFlixDB.findRecords('movies')
+    .then((movies) => {
+        res.json(movies);
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send('An error has occurred. Please try again.');
+    });   
 });
 
 // Get a single movie by name
 app.get('/movies/:name',(req, res) => {
-    res.json(movies.find((movie) => {
-        return movie.name.toLowerCase().replace(/\s/,'') === req.params.name.toLowerCase().replace(/\s/,'');
-    }));  
-});
-
-// Get all genres 
-app.get('/genres',(req, res) => {
-    res.json(genres);    
+    db.myFlixDB.findRecord('movies', {name: req.params.name})
+    .then((movies) => {
+        res.json(movies);
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send('An error has occurred. Please try again.');
+    }); 
 });
 
 // Get a single genre by name
-app.get('/genres/:name',(req, res) => {
-    res.json(genres.find((genre) => {
-        return genre.name.toLowerCase().replace(/\s/,'') === req.params.name.toLowerCase().replace(/\s/,'');
-    }));   
-});
-
-// Get all directors by name
-app.get('/directors',(req, res) => {
-    res.json(directors);    
+app.get('/genres/:name',(req, res) => {    
+    db.myFlixDB.findRecord('movies', {'genre.name': req.params.name})
+    .then(({genre}) => {
+        res.send(genre.description);
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send('An error has occurred. Please try again.');
+    });        
 });
 
 // Get a single director by name
 app.get('/directors/:name',(req, res) => {
-    res.json(directors.find((director) => {
-        return director.name.toLowerCase().replace(/\s/,'') === req.params.name.toLowerCase().replace(/\s/,'');
-    }));   
+    db.myFlixDB.findRecord('movies', {'director.name': req.params.name})
+    .then(({director}) => {
+        res.json(director);
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send('An error has occurred. Please try again.');
+    });     
 });
 
 // Users
 
 // Register a new user
 app.post('/users', (req, res) => {
-    // Check if both email and username were passed in request
-    if (!req.body.email || !req.body.username) {
-        res.status(400).send('Please include an email and a username to register a new user.');        
-    }
+    // Check if both email, username, and password were passed in request
+    if (!req.body.email || !req.body.username || !req.body.password) res.status(400).send('Please include an email and a username to register a new user.');        
 
     // Check if user with that email already exists
-    const existingUser = users.find((user) => user.email === req.body.email);
-    if (existingUser) res.status(400).send('Sorry, a user with that email address already exists. Please use another email address.');
-    
-    const newUser = req.body
-    newUser['id'] = uuid.v4(); // create unique user id
-    newUser['favorites'] = [];
-    users.push(newUser);
-    res.status(201).send(newUser);
+    db.myFlixDB.findRecord('users', {'email': req.body.email})
+    .then((result) => {
+        if (result) return res.status(400).send('Sorry, a user with that email address already exists. Please use another email address.');    
+        db.myFlixDB.insertRecord('users', req.body)
+        .then((newUser) => {
+            res.status(201).send(newUser.ops[0]);
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).send('An error has occurred. Please try again.');
+        });        
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send('An error has occurred. Please try again.');
+    });    
 });
 
 // Deregister a user
 app.delete('/users/:id', (req, res) => {
+     // Make sure path params and body params match
+     if (req.body.id !== req.params.id) return res.status(400).send('Request body and path parameters do not match.');
+
     const id = req.body.id;
-    let index; // index of user in users array
+    const user = {_id: db.myFlixDB.ObjectID(id)};
 
-    // Check if user exists and find index of user
-    const user = users.find((user,i) => {
-        if (user.id === id) {
-            index = i;
-            return true;
-        }
-    });
-
-    if (!user) res.status(400).send('Sorry, that user doesn\'t exist.');
-    users.splice(index,1);
-    res.status(200).send(`${user.email} has been removed.`);
+    // Check if user exists
+    db.myFlixDB.findRecord('users', user)
+    .then((result) => {
+        if (!result) return res.status(400).send('Sorry, that user doesn\'t exist.');    
+        db.myFlixDB.deleteRecord('users', user)
+        .then(() => {
+            res.status(200).send(`User with ID ${id} has been removed.`);
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).send('An error has occurred. Please try again.');
+        });        
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send('An error has occurred. Please try again.');
+    });   
 });
 
 // Update user's username
 app.patch('/users/:id/username', (req, res) => {
-    const id = req.params.id;   
+    // Make sure path params and body params match
+    if (req.body.id !== req.params.id) return res.status(400).send('Request body and path parameters do not match.');
+
+    const id = req.body.id; 
+    const user = {_id: db.myFlixDB.ObjectID(id)};
+    const username = req.body.username;
     // Check if user exists
-    const user = users.find((user) => user.id === id);
-    if (!user) res.status(400).send('Sorry, that user doesn\'t exist.');     
-    
-    user.username = req.body.username;
-    res.status(201).send(user);
+    db.myFlixDB.findRecord('users', user)
+    .then((result) => {
+        if (!result) return res.status(400).send('Sorry, that user doesn\'t exist.');    
+        db.myFlixDB.updateRecord('users', user, {$set: {username: username}})
+        .then(() => {
+            res.status(201).send(`Your username has been changed to ${username}.`);
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).send('An error has occurred. Please try again.');
+        });        
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send('An error has occurred. Please try again.');
+    });   
 });
 
-// Add a movie to user's favorites list
-app.patch('/users/:id/favorites/:name', (req, res) => {
-    const id = req.params.id;
-    const movie = req.body.movie;
+// Add a movie to user's favorite movies list
+app.patch('/users/:id/favorite-movies/:movie_id', (req, res) => {
+    // Make sure path params and body params match
+    if (req.body.id !== req.params.id || req.body.movie_id !== req.params.movie_id) return res.status(400).send('Request body and path parameters do not match.');
+
+    const id = req.body.id;
+    const user = {_id: db.myFlixDB.ObjectID(id)};
+    const movie = req.body.movie_id;
+
     // Check if user exists
-    const user = users.find((user) => user.id === id);
-    if (!user) res.status(400).send('Sorry, that user doesn\'t exist.');
-    // Check if movie is in user's favorites list
-    if (user.favorites.indexOf(movie) > -1) res.status(400).send('That movie is already in your favorites list. Try adding another one.');
-    
-    user.favorites.push(movie); 
-    res.status(201).send(`${movie} has been added.`)
+    db.myFlixDB.findRecord('users', user)
+    .then((result) => {
+        if (!result) return res.status(400).send('Sorry, that user doesn\'t exist.');            
+        // Check if user has a favorite movies list already
+        let updateCondition = {$set : {favoriteMovies: [movie]}};
+        
+        if (result.favoriteMovies) {
+            // Check if movie is already in user's favorites list
+            if (result.favoriteMovies.indexOf(movie) > -1) return res.status(400).send('That movie is already in your favorites list. Try adding another one.');
+            
+            updateCondition = {$push : {favoriteMovies: movie}}
+        } 
+        
+        db.myFlixDB.updateRecord('users', user, updateCondition)
+        .then(() => {
+            res.status(201).send(`${movie} has been added to your favorites list.`);
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).send('An error has occurred. Please try again.');
+        });        
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send('An error has occurred. Please try again.');
+    });   
 });
 
 // Remove a movie from user's favorites list
-app.delete('/users/:id/favorites/:name', (req, res) => {
-    const id = req.params.id;
-    const movie = req.body.movie;    
+app.delete('/users/:id/favorite-movies/:movie_id', (req, res) => {
+    // Make sure path params and body params match
+    if (req.body.id !== req.params.id || req.body.movie_id !== req.params.movie_id) return res.status(400).send('Request body and path parameters do not match.');
+
+    const id = req.body.id;
+    const user = {_id: db.myFlixDB.ObjectID(id)};
+    const movie = req.body.movie_id;
+
     // Check if user exists
-    const user = users.find((user) => user.id === id);
-    if (!user) res.status(400).send('Sorry, that user doesn\'t exist.');
-    // Check if movie is in user's favorites list
-    if (user.favorites.indexOf(movie) < 0) res.status(400).send('That movie is not in your favorites list. Try removing another one.');
-    
-    user.favorites.splice(user.favorites.indexOf(movie), 1);
-    res.status(200).send(`${movie} has been removed.`);
+    db.myFlixDB.findRecord('users', user)
+    .then((result) => {
+        if (!result) res.status(400).send('Sorry, that user doesn\'t exist.');  
+        if (!result.favoriteMovies) return res.status(400).send('You do not have any movies added to your favorites list.');   
+        // Check if movie exists in user's favorites list
+        if (result.favoriteMovies.indexOf(movie) < 0) return res.status(400).send('That movie is not in your favorites list. Try removing another one.');
+        
+        db.myFlixDB.updateRecord('users', user, {$pull: {favoriteMovies: movie}})
+        .then(() => {
+            res.status(201).send(`Movie with ID ${movie} has been removed.`);
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).send('An error has occurred. Please try again.');
+        });        
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send('An error has occurred. Please try again.');
+    });   
 });
 
 app.listen(8080);
