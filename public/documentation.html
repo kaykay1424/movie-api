@@ -170,16 +170,17 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Register a new user</td>
+                    <td>Create a new user</td>
                     <td>/users</td>
                     <td>POST</td>
                     <td>N/A</td>
                     <td>
                         <code>
                             {
-                                "username": "username",
-                                "password": "password",
-                                "email": "janedoe@example.com"
+                                "birthdate": "1990-01-22",
+                                "username": "username", (required)
+                                "password": "password", (required)
+                                "email": "janedoe@example.com" (required)
                             }
                         </code>
                         <p>Data must be in json format</p>
@@ -189,7 +190,8 @@
                             {
                                 "_id": "7088b2e34fe1a44fbe0a407e",
                                 "birthdate": "1990-01-22",
-                                "email": "janedoeh@example.com",
+                                "email": "janedoe@example.com",
+                                "favoriteMovies": [],
                                 "password": "password",
                                 "username": "janedoe"
                             }
@@ -198,23 +200,34 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Update user"s username</td>
-                    <td>/users/:id/username</td>
+                    <td>Update user's info (username, password, email, date of birth)</td>
+                    <td>/users/:id</td>
                     <td>PATCH</td>
                     <td>id (required)</td>
                     <td>
                         <code>
                             {
-                                "id": "7088b2e34fe1a44fbe0a407e",
-                                "username": "name"
+                                "username": "name",
+                                "email": "johndoe@example.com"
                             }
-
+                        </code>
+                        <code>
+                            {"password": "password"}
                         </code>
                         <p>Data must be in json format</p>
                     </td>
                     <td>
-                        <p>Your username has been changed to "name".</p>                        
-                        <p>Data will be returned in text format</p>
+                        <code>
+                            {
+                                "_id": "7088b2e34fe1a44fbe0a407e",
+                                "birthdate": "1990-01-22",
+                                "email": "johndoe@example.com", 
+                                "favoriteMovies": [],
+                                "password": "password",
+                                "username": "janedoe"
+                            }
+                        </code>                    
+                        <p>Data will be returned in json format</p>
                     </td>
                 </tr>
                 <tr>
@@ -226,10 +239,7 @@
                         <p>movie_id (required)</p>
                     </td>
                     <td>
-                        {
-                            "id": "7088b2e34fe1a44fbe0a407e",
-                            "movie_id": "5088a2e34fe1a44fbe0a407e"
-                        }
+                        { "movie_id": "5088a2e34fe1a44fbe0a407e"} (required)
                         <p>Data must be in json format</p>
                     </td>
                     <td>
@@ -246,28 +256,22 @@
                         <p>movie_id (required)</p>
                     </td>
                     <td>
-                        {
-                            "id": "7088b2e34fe1a44fbe0a407e",
-                            "movie_id": "5088a2e34fe1a44fbe0a407e"
-                        }
+                        {"movie_id": "5088a2e34fe1a44fbe0a407e" (required)}
                         <p>Data must be in json format</p>
                     </td>
                     <td>
-                        <p>"name" has been removed</p>
+                        <p>Movie with ID 5088a2e34fe1a44fbe0a407e has been removed</p>
                         <p>Data will be returned in text format</p>
                     </td>
                 </tr>
                 <tr>
-                    <td>Deregister a user</td>
+                    <td>Delete a user</td>
                     <td>/users/:id</td>
                     <td>DELETE</td>
                     <td>id (required)</td>
+                    <td>N/A</td>
                     <td>
-                        {"id": "7088b2e34fe1a44fbe0a407e"}
-                        <p>Data must be in json format</p>
-                    </td>
-                    <td>
-                        <p>"janedoe@example.com has been deregistered"</p>
+                        <p>"User with ID 7088b2e34fe1a44fbe0a407e has been deleted"</p>
                         <p>Data will be returned in text format</p>
                     </td>
                 </tr>
