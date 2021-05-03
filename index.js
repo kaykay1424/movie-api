@@ -1,17 +1,20 @@
 // Modules
 
 const dotenv = require('dotenv'),
-express = require('express'),
-Models = require('./models.js'),
-mongoose = require('mongoose'),
-morgan = require('morgan');
+    express = require('express'),
+    Models = require('./models.js'),
+    mongoose = require('mongoose'),
+    morgan = require('morgan'),
+    passport = require('passport');    
 
 dotenv.config({path: __dirname + '/.env'});
 
+require('./passport');
+
 // Mongoose models
 
-const Movies = Models.Movie;
-const Users = Models.User;
+const Movies = Models.Movie,
+    Users = Models.User;
 
 mongoose.connect(process.env.MONGO_DB_URL, 
     { 
@@ -43,7 +46,7 @@ app.get('/',(req, res) => {
 });
 
 // Get a list of all movies by name
-app.get('/movies',(req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.find()
     .then((movies) => {
         res.status(200).json(movies);
@@ -54,7 +57,7 @@ app.get('/movies',(req, res) => {
 });
 
 // Get a single movie by name
-app.get('/movies/:name',(req, res) => {
+app.get('/movies/:name', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.findOne({name: req.params.name})
     .then((movie) => {
         res.status(200).json(movie);
@@ -65,7 +68,7 @@ app.get('/movies/:name',(req, res) => {
 });
 
 // Get a single genre by name
-app.get('/genres/:name',(req, res) => {    
+app.get('/genres/:name', passport.authenticate('jwt', { session: false }), (req, res) => {    
     Movies.findOne({'genre.name': req.params.name})
     .then(({genre}) => {
         res.status(200).send(genre.description);
@@ -76,7 +79,7 @@ app.get('/genres/:name',(req, res) => {
 });
 
 // Get a single director by name
-app.get('/directors/:name',(req, res) => {
+app.get('/directors/:name', passport.authenticate('jwt', { session: false }), (req, res) => {
     Movies.findOne({'director.name': req.params.name})
     .then(({director}) => {
         res.status(200).json(director);
@@ -87,6 +90,8 @@ app.get('/directors/:name',(req, res) => {
 });
 
     // Users
+
+const auth = require('./auth')(app); // login route
 
 // Create a new user
 app.post('/users', (req, res) => {
@@ -115,7 +120,7 @@ app.post('/users', (req, res) => {
 });
 
 // Delete a user
-app.delete('/users/:id', (req, res) => {
+app.delete('/users/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
     const id = req.params.id;
     const filter = {_id: id};
 
@@ -137,7 +142,7 @@ app.delete('/users/:id', (req, res) => {
 });
 
 // Update user's info
-app.patch('/users/:id', (req, res) => {
+app.patch('/users/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
     const user = req.body; 
     const filter = {_id: req.params.id};
 
@@ -163,7 +168,7 @@ app.patch('/users/:id', (req, res) => {
 });
 
 // Add a movie to user's favorite movies list
-app.patch('/users/:id/favorite-movies/:movie_id', (req, res) => {
+app.patch('/users/:id/favorite-movies/:movie_id', passport.authenticate('jwt', { session: false }), (req, res) => {
     // Make sure path params and body params match
     if (req.body.movie_id !== req.params.movie_id) return res.status(400).send('Request body and path parameters do not match.');
 
@@ -179,14 +184,14 @@ app.patch('/users/:id/favorite-movies/:movie_id', (req, res) => {
         
         if (existingUser.favoriteMovies) {
             // Check if movie is already in user's favorites list
-            if (existingUser.favoriteMovies.indexOf(movie_id) > -1) return res.status(400).send('That movie is already in your favorites list. Try adding another one.');
+            if (existingUser.favoriteMovies.indexOf(movie_id) > -1) return res.status(400).send('That movie is already in your favorite movies list. Try adding another one.');
             
             updateCondition = {$push : {favoriteMovies: movie_id}}
         } 
         
         Users.findOneAndUpdate(filter, updateCondition)
         .then(() => {
-            res.status(201).send(`Movie with ID ${movie_id} has been added to your favorites list.`);
+            res.status(201).send(`Movie with ID ${movie_id} has been added to your favorite movies list.`);
         }).catch((err) => {
             console.error(err);
             res.status(500).send('An error has occurred.' + err);
@@ -198,7 +203,7 @@ app.patch('/users/:id/favorite-movies/:movie_id', (req, res) => {
 });
 
 // Remove a movie from user's favorites list
-app.delete('/users/:id/favorite-movies/:movie_id', (req, res) => {
+app.delete('/users/:id/favorite-movies/:movie_id', passport.authenticate('jwt', { session: false }), (req, res) => {
     // Make sure path params and body params match
     if (req.body.movie_id !== req.params.movie_id) return res.status(400).send('Request body and path parameters do not match.');
 
@@ -209,13 +214,13 @@ app.delete('/users/:id/favorite-movies/:movie_id', (req, res) => {
     Users.findOne(filter)
     .then((existingUser) => {
         if (!existingUser) res.status(400).send('Sorry, that user doesn\'t exist.');  
-        if (!existingUser.favoriteMovies) return res.status(400).send('You do not have any movies added to your favorites list.');   
+        if (!existingUser.favoriteMovies) return res.status(400).send('You do not have any movies added to your favorite movies list.');   
         // Check if movie exists in user's favorites list
-        if (existingUser.favoriteMovies.indexOf(movie_id) < 0) return res.status(400).send('That movie is not in your favorites list. Try removing another one.');
+        if (existingUser.favoriteMovies.indexOf(movie_id) < 0) return res.status(400).send('That movie is not in your favorite movies list. Try removing another one.');
         
         Users.findOneAndUpdate(filter, {$pull: {favoriteMovies: movie_id}})
         .then(() => {
-            res.status(201).send(`Movie with ID ${movie_id} has been removed.`);
+            res.status(201).send(`Movie with ID ${movie_id} has been removed from your favorite movies list.`);
         }).catch((err) => {
             console.error(err);
             res.status(500).send('An error has occurred.' + err);
