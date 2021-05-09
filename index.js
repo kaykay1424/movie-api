@@ -10,9 +10,13 @@ const { check, validationResult} = require('express-validator'),
     morgan = require('morgan'),
     passport = require('passport');  
 
-const port = process.env.PORT || 8080;
+/*********** Environment Setup **********/    
 
 dotenv.config({path: __dirname + '/.env'});
+
+const port = process.env.PORT || 8080,
+    environment = process.env.NODE_ENV || 'local',
+    dbURL = environment === 'local' ? process.env.MONGO_DB_LOCAL_URI : process.env.MONGO_DB_REMOTE_URI;
 
 /********** Helper functions **********/
 
@@ -27,7 +31,7 @@ const Actors = Models.Actor,
     Movies = Models.Movie,
     Users = Models.User;
 
-mongoose.connect(process.env.MONGO_DB_URL, 
+mongoose.connect(dbURL, 
     { 
         useNewUrlParser: true,
         useUnifiedTopology: true,

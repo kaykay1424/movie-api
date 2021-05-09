@@ -5,12 +5,12 @@ const jwt = require('jsonwebtoken'),
 
 require('./passport'); // local passport file
 
-const jwtSecret = process.env.jwtSecret; // this has to be the same key used in the JWTStrategy
+const JWTSECRET = process.env.JWTSECRET; // this has to be the same key used in the JWTStrategy
 
 /********* Functions  *********/
 
 const generateJWTToken = (user) => {
-    return jwt.sign(user, jwtSecret, {
+    return jwt.sign(user, JWTSECRET, {
         subject: user.username, // username to be encoded in the JWT
         expiresIn: '7d', // token will expire in 7 days
         algorithm: 'HS256' // algorithm used to “sign” or encode the values of the JWT
