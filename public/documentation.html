@@ -14,10 +14,10 @@
             <caption>Movies</caption>
             <thead>
                 <tr>
-                    <th>"Description"</th>
+                    <th>Description</th>
                     <th>URL</th>
                     <th>HTTP Method</th>
-                    <th>Query Parameters</th>
+                    <th>Query/Path Parameters</th>
                     <th>Request Format</th>
                     <th>Response Format</th>
                 </tr>
@@ -27,7 +27,23 @@
                     <td>Get a list of all movies</td>
                     <td>/movies </td>
                     <td>GET</td>
-                    <td>N/A</td>
+                    <td>
+                        <p>
+                            <b>Query params:</b>  
+                            <br>rating (optional)
+                            <br>releaseYear (optional)
+                            <br>featured (optional)
+                        </p>
+                        <p> 
+                            <b>Accepted values:</b> 
+                            <br>1 (ascending order)
+                            <br>-1 (descending order)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /movies?rating=-1 
+                            <br>sort movies by rating in descending order 
+                        </p>
+                    </td>
                     <td>N/A</td>
                     <td>
                         <code>
@@ -89,14 +105,68 @@
                                 }
                             ]
                         </code>                        
-                        <p>Data will be returned in json format</p>
+                        <p><b>Data type:</b> json</p>
+                    </td>
+                </tr>  
+                <tr>
+                    <td>Get a list of featured movies</td>
+                    <td>/featured-movies </td>
+                    <td>GET</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    <td>
+                        <code>
+                            [
+                                "Avatar",
+                                "Titanic",
+                                "Avengers: End Game",
+                                "Coming 2 America",
+                                "The Lion King"
+                            ]
+                        </code>                        
+                        <p><b>Data type:</b> json</p>
+                    </td>
+                </tr>  
+                <tr>
+                    <td>Get movies favorited by users</td>
+                    <td>/favorite-movies</td>
+                    <td>GET</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    <td>
+                        <code>
+                            [
+                                {
+                                    "name": "Toy Story",
+                                    "usersFavorited": 3
+                                },
+                                {
+                                    "name": "Titanic",
+                                    "usersFavorited": 2
+                                },
+                                {
+                                    "name": "Avatar",
+                                    "usersFavorited": 2
+                                }                               
+                            ]
+                        </code>
+                        <p><b>Data type:</b> json</p>
                     </td>
                 </tr>  
                 <tr>
                     <td>Get a single movie by name</td>
                     <td>/movies/:name</td>
                     <td>GET</td>
-                    <td>name (required)</td>
+                    <td>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>name (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /movies/Avatar 
+                            <br>get movie info for the movie Avatar
+                        </p>
+                    </td>
                     <td>N/A</td>
                     <td>
                         <code>
@@ -120,38 +190,236 @@
                                 name: 'Avatar'
                             }
                         </code>
-                        <p>Data will be returned in json format</p>
+                        <p><b>Data type:</b> json</p>
                     </td>
-                </tr>                              
+                </tr>  
                 <tr>
-                    <td>Get description about a single genre by "name"</td>
-                    <td>/genres/:name</p> </td>
+                    <td>Get stars of a movie by movie name</td>
+                    <td>/movies/:name/stars</td>
                     <td>GET</td>
-                    <td>name (required)</td>
+                    <td>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>name (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /movies/Avatar/stars 
+                            <br>get stars for the movie Avatar
+                        </p>
+                    </td>
                     <td>N/A</td>
                     <td>
-                        <p>Aliquam vestibulum, quam vel commodo rhoncus, eros diam venenatis quam, sit amet volutpat mi quam quis nulla.</p>
-                        <p>Data will be returned in text format</p>
+                        <code>
+                            [
+                                {
+                                    "actor": "Sam Worthington",
+                                    "character": "Jake Sully"
+                                },
+                                {
+                                    "actor": "Zoe Saldana",
+                                    "character": "Neytiri"
+                                },
+                                {
+                                    "actor": "Sigourney Weaver",
+                                    "character": "Dr. Grace Augustine"
+                                }
+                            ]
+                        </code>
+                        <p><b>Data type:</b> json</p>
+                    </td>
+                </tr>                            
+                <tr>
+                    <td>Get info about a single genre by name</td>
+                    <td>/genres/:name</p> </td>
+                    <td>GET</td>
+                    <td>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>name (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /genres/Comedy 
+                            <br>get info on the Comedy genre
+                        </p>                        
+                    </td>
+                    <td>N/A</td>
+                    <td>
+                        {
+                            "description": "A comedy film is a category of film in which the main emphasis is on humor. These films are designed to make the audience laugh through amusement and most often work by exaggerating characteristics for humorous effect.",
+                            "wikipediaLink": "https://en.wikipedia.org/wiki/Comedy_film"
+                        }
+                        <p><b>Data type:</b> json</p>
                     </td>
                 </tr>                
                 <tr>
                     <td>Get info about a single director by name</td>
                     <td>/directors/:name</td>
                     <td>GET</td>
-                    <td>name (required)</td>
+                    <td>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>name (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /directors/Anthony Russo 
+                            <br>get info on the director Anthony Russo
+                        </p>
+                    </td>
                     <td>N/A</td>
                     <td>
                         <code>
                             {
-                                bio: `James Francis Cameron was born on August 16, 1954 in Kapuskasing, Ontario, Canada. He moved to the United States in 1971. The son of an engineer, he majored in physics at California State University before switching to English, and eventually dropping out. He then drove a truck to support his screenwriting ambition. He landed his first professional film job as art director, miniature-set builder, and process-projection supervisor on Roger Corman's Battle Beyond the Stars (1980) and had his first experience as a director with a two week stint on Piranha II: The Spawning (1981) before being fired.
-                                He then wrote and directed The Terminator (1984), a futuristic action-thriller starring Arnold Schwarzenegger, Michael Biehn and Linda Hamilton. It was a low budget independent film, but Cameron's superb, dynamic direction made it a surprise mainstream success and it is now regarded as one of the most iconic pictures of the 1980s. After this came a string of successful, bigger budget science-fiction action films such as Aliens (1986), The Abyss (1989) and Terminator 2: Judgment Day (1991). In 1990, Cameron formed his own production company, Lightstorm Entertainment. In 1997, he wrote and directed Titanic (1997), a romance epic about two young lovers from different social classes who meet on board the famous ship. The movie went on to break all box office records and earned eleven Academy Awards. It became the highest grossing movie of all time until 12 years later, Avatar (2009), which invented and pioneered 3D film technology, and it went on to beat ""Titanic"", and became the first film to cost two billion dollars until 2019 when Marvel took the record.
-                                James Cameron is now one of the most sought-after directors in Hollywood. He was formerly married to producer Gale Anne Hurd, who produced several of his films. In 2000, he married actress Suzy Amis, who appeared in Titanic, and they have three children.`,
-                                birth_year: 1954,
-                                death_year: null,
-                                name: 'James Cameron'
+                                "bio": "Anthony Russo was born on February 3, 1970 in Cleveland, Ohio, USA as Anthony J. Russo. He is a producer and director, known for Captain America: The Winter Soldier (2014), Avengers: Endgame (2019) and Avengers: Infinity War (2018).",
+                                "birthYear": 1970,
+                                "imdbLink": "https://www.imdb.com/name/nm0751577/"
                             }
                         </code>
-                        <p>Data will be returned in json format</p>
+                        <p><b>Data type:</b> json</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table>
+            <caption>Actors</caption>
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>URL</th>
+                    <th>HTTP Method</th>
+                    <th>Query/Path Parameters</th>
+                    <th>Request Format</th>
+                    <th>Response Format</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Get a list of all actors</td>
+                    <td>/actors</td>
+                    <td>GET</td>
+                    <td>
+                        <p>
+                            <b>Query params:</b> 
+                            <br>birthDate (optional)
+                            <br>birthCountry (optional)
+                        </p>
+                        <p> 
+                            <b>Accepted values:</b> 
+                            <br>1 (ascending order)
+                            <br>-1 (descending order)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /actors?birthDate=-1 
+                            <br> sort actors by birthDate in descending order
+                        </p>
+                    </td>
+                    <td>N/A</td>
+                    <td>
+                        <code>
+                            [
+                                {
+                                    "occupations": [
+                                        "Actress",
+                                        "Soundtrack",
+                                        "Producer"
+                                    ],
+                                    "starsIn": [
+                                        "Alien",
+                                        "Alien: Resurrection",
+                                        "Avatar",
+                                        "Galaxy Quest"
+                                    ],
+                                    "_id": "60939311930017ce2291ae60",
+                                    "bio": "Sigourney Weaver was born Susan Alexandra Weaver, on October 8, 1949, in Leroy Hospital in New York City. Her father, TV producer Sylvester L. Weaver Jr., originally wanted to name her Flavia, because of his passion for Roman history (he had already named her elder brother Trajan). Her mother, Elizabeth Inglis, was a British actress who had sacrificed her career for a family. Sigourney grew up in a virtual bubble of guiltless bliss, being taken care by nannies and maids. By 1959, the Weavers had resided in 30 different households. In 1961, Sigourney began attending the Brearly Girls Academy, but her mother moved her to another New York private school, Chapin. Sigourney was quite a bit taller than most of her other classmates (at the age of 13, she was already 5' 10\"), resulting in her constantly being laughed at and picked on; in order to gain their acceptance, she took on the role of class clown.\n\n        In 1962, her family moved to San Francisco briefly, an unpleasant experience for her. Later, they moved back east to Connecticut, where she became a student at the Ethel Walker School, facing the same problems as before. In 1963, she changed her name to \"Sigourney\", after the character \"Sigourney Howard\" in F. Scott Fitzgerald's \"The Great Gatsby\" (her own birth name, Susan, was in honor of her mother's best friend, explorer Susan Pretzlik). Sigourney had already starred in a school drama production of \"A Midsummer Night's Dream\", and, in 1965, she worked during the summer with a stock troupe, performing in \"A Streetcar Named Desire\" and \"You Can't Take It With You\" (she didn't star in the latter because she was taller than the lead actor!). After graduating from school in 1967, she spent some months in a kibbutz at Israel. At that time, she became engaged to reporter Aaron Latham, but they soon broke up.\n\n        In 1969, Sigourney enrolled in Stanford University, majoring in English Literature. She also participated in school plays, especially Japanese Noh plays. By that time she was living in a treehouse, alongside a male friend, dressed in elf-like clothes! After completing her studies in 1971, she applied for the Yale School of Drama in New York. Despite appearing at the audition reading a Bertolt Brecht speech and wearing a rope-like belt, she was accepted by the school but her professors rejected her, because of her height, and kept typecasting her as prostitutes and old women (whereas classmate Meryl Streep was treated almost reverently). However, in 1973, while making her theatrical debut with \"Watergate Classics\", she met up with a team of playwrights and actors and began hanging around with them, resulting in long-term friendships with Christopher Durang, Kate McGregor-Stewart and Albert Innaurato.\n\n        In 1974 she starred in such plays as Aristophanes' \"Frogs\" and Durang's \"The Nature and Purpose of the Universe\" and \"Daryl and Carol and Kenny and Jenny\", as Jenny. After finishing her studies that year, she began seriously pursuing a stage career, but her height kept being a hindrance. However, she continued working on stage with Durang (in \"Titanic\" [1975]) and Innaurato (in \"Gemini\" [1976]). Other 1970s stage works included \"Marco Polo Sing a Song\", \"The Animal Kingdom\", \"A Flea in Her Ear\", \"The Constant Husband\", \"Conjuring an Event\" and others. However, the one that really got her noticed was \"Das Lusitania Songspiel\", a play she co-wrote with Durang and in which she starred for two seasons, from 1979 to 1981. She was also up for a Drama Desk Award for it. During the mid-70s she appeared in several TV spots and even starred as Avis Ryan in the soap opera Somerset (1970).\n\n        In 1977 she was cast in the role Shelley Duvall finally played in Annie Hall (1977), after rejecting the part due to prior stage commitments. In the end, however, Woody Allen offered her a part in the film that, while short (she was onscreen for six seconds), made many people sit up and take notice. She later appeared in Madman (1978) and, of course, Alien (1979). The role of the tough, uncompromising Ripley made Sigourney an \"overnight\" star and brought her a British Award Nomination. She next appeared in Eyewitness (1981) and The Year of Living Dangerously (1982), the latter being a great success in Australia that won an Oscar and brought Sigourney and co-star Mel Gibson to Cannes in 1983. The same year she delivered an honorary Emmy award to her father, a few months before her uncle, actor Doodles Weaver, committed suicide. That year also brought her a romance with Jim Simpson, her first since having broken up two years previously with James M. McClure. She and Simpson were married on 1 October 1984. Sigourney had meanwhile played in the poorly received Deal of the Century (1983) and the mega-hit Ghostbusters (1984). She was also nominated for a Tony Award for her tour-de-force performance in the play \"Hurly Burly\". Then followed One Woman or Two (1985), Half Moon Street (1986) and Aliens (1986). The latter was a huge success, and Sigourney was nominated for both a Golden Globe and an Oscar.\n\n        She then entered her most productive career period and snatched Academy Award nominations, in both Best Actress and Best Supporting Actress categories, for her intense portrayal of Dian Fossey in Gorillas in the Mist (1988) and her delicious performance as a double-crossing, power-hungry corporate executive in Working Girl (1988). She ended up losing in both, but made up for it to a degree by winning both Golden Globes. After appearing in a documentary about fashion photographer Helmut Newton, Helmut Newton: Frames from the Edge (1989), and reprising her role in the sequel Ghostbusters II (1989), she discovered she was pregnant and retired from public life for a while. She gave birth to her daughter Charlotte Simpson on 13 April 1990, and returned to movies as a (now skinhead) Ripley in Alien³ (1992) and a gorgeous Queen Isabella of Spain in 1492: Conquest of Paradise (1992), her second film with director Ridley Scott. She starred in the political comedy Dave (1993) alongside Kevin Kline, and then a Roman Polanski thriller, Death and the Maiden (1994).\n\n        In 1995 she was seen in Jeffrey (1995) and Copycat (1995). The next year she \"trod the boards\" in \"Sex and Longing\", yet another Durang play. She hadn't performed in the theater in many years before that play, her last stage performances occurring in the 1980s in \"As You Like It\" (1981), \"Beyond Therapy\" (1981), \"The Marriage of 'Bette and Boo'\" (1985) and \"The Merchant of Venice\" (1986). In 1997 she was the protagonist in Snow White: A Tale of Terror (1997), The Ice Storm (1997) and Alien: Resurrection (1997). Her performance in \"The Ice Storm\" got her a BAFTA prize and another Golden Globe nod. She also gave excellent performances in A Map of the World (1999) and the sci-fi spoof Galaxy Quest (1999). Her next comedy, Company Man (2000), wasn't quite so warmly welcomed critically and financially, however. She next played a sexy con artist in Heartbreakers (2001) and had a voice role in Big Bad Love (2001). Her father died at the age of 93. Sigourney herself has recently starred in Tadpole (2002) and is planning a cinematic version of The Guys (2002), the enthralling September 11th one-act drama she played on stage on late 2001. At age 60, she played a crucial role in Avatar (2009), which became the top box-office hit of all time. The film reunited her with her \"Aliens\" director James Cameron. Her beauty, talent, and hard-work keeps the ageless actress going, and she has continued to win respect from her fans and directors.",
+                                    "birthCountry": "USA",
+                                    "image": "https://m.media-amazon.com/images/M/MV5BMTk1MTcyNTE3OV5BMl5BanBnXkFtZTcwMTA0MTMyMw@@._V1_UY317_CR12,0,214,317_AL_.jpg",
+                                    "imdbLink": "https://www.imdb.com/name/nm0000244/",
+                                    "name": "Sigourney Weaver",
+                                    "birthDate": "1949-10-08T00:00:00.000Z"
+                                },
+                                {
+                                    "occupations": [
+                                        "Actor",
+                                        "Writer",
+                                        "Additional Crew"
+                                    ],
+                                    "starsIn": [
+                                        "Evolution",
+                                        "The Time Machine",
+                                        "Drumline",
+                                        "The Replacements"
+                                    ],
+                                    "_id": "60939311930017ce2291ae68",
+                                    "bio": "Orlando Jones was born on April 10, 1968 in Mobile, Alabama, USA. He is an actor and writer, known for Evolution (2001), The Time Machine (2002) and Drumline (2002). He has been married to Jacqueline Staph since January 2, 2009. They have two children.",
+                                    "birthCountry": "USA",
+                                    "image": "https://m.media-amazon.com/images/M/MV5BMTY1NTY2NzA5MF5BMl5BanBnXkFtZTcwMDc0MTkyMQ@@._V1_UY317_CR47,0,214,317_AL_.jpg",
+                                    "imdbLink": "https://www.imdb.com/name/nm0428963/",
+                                    "name": "Orlando Jones",
+                                    "birthDate": "1968-04-10T00:00:00.000Z"
+                                },
+                                {
+                                    "occupations": [
+                                        "Actor",
+                                        "Producer",
+                                        "Soundtrack"
+                                    ],
+                                    "starsIn": [
+                                        "Iron Man",
+                                        "Iron Man 3",
+                                        "The Avengers",
+                                        "Avengers: Endgame"
+                                    ],
+                                    "_id": "60939311930017ce2291ae69",
+                                    "bio": "Robert Downey Jr. has evolved into one of the most respected actors in Hollywood. With an amazing list of credits to his name, he has managed to stay new and fresh even after over four decades in the business.\n\n        Downey was born April 4, 1965 in Manhattan, New York, the son of writer, director and filmographer Robert Downey Sr. and actress Elsie Downey (née Elsie Ann Ford). Robert's father is of half Lithuanian Jewish, one quarter Hungarian Jewish, and one quarter Irish, descent, while Robert's mother was of English, Scottish, German, and Swiss-German ancestry. Robert and his sister, Allyson Downey, were immersed in film and the performing arts from a very young age, leading Downey Jr. to study at the Stagedoor Manor Performing Arts Training Center in upstate New York, before moving to California with his father following his parents' 1978 divorce. In 1982, he dropped out of Santa Monica High School to pursue acting full time. Downey Sr., himself a drug addict, exposed his son to drugs at a very early age, and Downey Jr. would go on to struggle with abuse for decades.\n\n        Downey Jr. made his debut as an actor at the age of five in the film Pound (1970), written and directed by his father, Robert Downey Sr.. He built his film repertoire throughout the 1980s and 1990s with roles in Tuff Turf (1985), Weird Science (1985), True Believer (1989), and Wonder Boys (2000) among many others. In 1992, Downey received an Academy Award nomination and won the BAFTA (British Academy Award) for Best Actor for his performance in the title role of Chaplin (1992).\n\n        In Robert Altman's Short Cuts (1993), he appeared as an aspiring film make-up artist whose best friend commits murder. In Oliver Stone's Natural Born Killers (1994), with Woody Harrelson and Juliette Lewis, Downey starred as a tabloid TV journalist who exploits a murderous couple's killing spree to boost his ratings. For the comedy Heart and Souls (1993), Downey starred as a young man with a special relationship with four ghosts. In 1995, Downey starred in Restoration (1995), with Hugh Grant, Meg Ryan and Ian McKellen, directed by Michael Hoffman. Also that year, he starred in Richard III (1995), in which he appears opposite his Restoration (1995) co-star McKellen.\n\n        In 1997, Downey was seen in Robert Altman's The Gingerbread Man (1998), alongside Kenneth Branagh, Daryl Hannah and Embeth Davidtz; in One Night Stand (1997), directed by Mike Figgis and starring Wesley Snipes and Nastassja Kinski; and in Hugo Pool (1997), directed by his father, Robert Downey Sr. and starring Sean Penn and Patrick Dempsey. In September of 1999, Downey appeared in Black & White (1999), written and directed by James Toback, along with Ben Stiller, Elijah Wood, Gaby Hoffmann, Brooke Shields and Claudia Schiffer. In January of 1999, he starred with Annette Bening and Aidan Quinn in In Dreams (1999), directed by Neil Jordan.\n\n        In 2000, Downey co-starred with Michael Douglas and Tobey Maguire in Wonder Boys (2000), directed by Curtis Hanson. In this dramatic comedy, Downey played the role of a bisexual literary agent. In 2001, Downey made his prime-time television debut when he joined the cast of the Fox-TV series Ally McBeal (1997) as attorney \"Larry Paul\". For this role, he won the Golden Globe Award for Best Performance by an Actor in a Supporting Role in a Series, Mini-Series or Motion Picture Made for Television, as well as the Screen Actors Guild Award for Outstanding Performance by a Male in a Comedy Series. In addition, Downey was nominated for an Emmy for Outstanding Supporting Actor in a Comedy Series.\n\n        The actor's drug-related problems escalated from 1996 to 2001, leading to arrests, rehab visits and incarcerations, and he was eventually fired from Ally McBeal (1997). Emerging clean and sober in 2003, Downey Jr. began to rebuild his career.\n\n        He marked his debut into music with his debut album, titled \"The Futurist\", on the Sony Classics Label on November 23rd, 2004. The album's eight original songs, that Downey wrote, and his two musical numbers debuting as cover songs revealed his sultry singing voice and his musical talents. Downey displayed his versatility in two different films in October 2003: the musical/drama The Singing Detective (2003), a remake of the BBC hit of the same name, and the thriller Gothika (2003) starring Halle Berry and Penélope Cruz. Downey starred in powerful yet humbling roles inspired by real-life accounts of some of history's most precious kept secrets, including Richard Linklater's A Scanner Darkly (2006) in 2006 co-starring Keanu Reeves, Winona Ryder and Woody Harrelson, and Fur: An Imaginary Portrait of Diane Arbus (2006) co-starring Nicole Kidman, a film inspired by the life of Diane Arbus, the revered photographer whose images captured attention in the early 1960s. These roles exhibited Downey's momentum from the previous year of 2005, in which he starred in the Academy Award®-nominated feature film Good Night, and Good Luck. (2005), directed by George Clooney and in Shane Black's action comedy Kiss Kiss Bang Bang (2005) co-starring Val Kilmer. In 2007, he co-starred in David Fincher's suspenseful Zodiac (2007), alongside Jake Gyllenhaal and Mark Ruffalo, about the notorious serial killer who haunted San Francisco during the 1970s.\n\n        In May 2008, Downey achieved critical acclaim and worldwide box office success for his starring role in Iron Man (2008), Jon Favreau's big-screen rendering of the Marvel comic book superhero. The film co-starred Gwyneth Paltrow, Jeff Bridges and Terrence Howard. In August of 2008, Downey starred with Ben Stiller and Jack Black in the comedy Tropic Thunder (2008), and went on to receive an Academy Award®-nomination for Best Supporting Actor for his, Kirk Lazarus.\n\n        In December 2009, Downey starred in the action-adventure Sherlock Holmes (2009). The film, directed by Guy Ritchie, co-starred Jude Law and Rachel McAdams and earned Downey a Golden Globe for Best Performance by an Actor in a Motion Picture - Comedy or Musical in January of 2010. In early Summer 2010, Downey re-teamed with director Jon Favreau and reprised his role as \"Tony Stark/Iron Man\" in the hugely successful sequel to the original film, Iron Man 2 (2010), starring Gwyneth Paltrow, Scarlett Johansson, Samuel L. Jackson and Mickey Rourke.\n\n        Downey next starred in Due Date (2010), a comedy directed by Todd Phillips, in which he plays the role of an expectant father on a road trip racing to get back in time for the birth of his first child. Due Date (2010), starring The Hangover (2009)'s Zach Galifianakis, was released in November 2010.\n\n        Downey was honored by Time Magazine's \"Time 100\" in 2008, an annual list of the 100 most influential people in the world. His laurels include two Academy Award nominations, three Golden Globe wins, numerous other award nominations and wins, and tremendous popular and commercial success, particularly in his roles as Sherlock Holmes and Tony Stark (the latter of which he has so far played in Iron Man (2008), Iron Man 2 (2010), The Avengers (2012), Iron Man 3 (2013), and Avengers: Age of Ultron (2015). For three consecutive years, from 2012 to 2015, Downey has topped the Forbes list of Hollywood's highest-paid actors, making an estimated $80 million in earnings between June 2014 and June 2015.\n\n        In 2005, Downey Jr. married Susan Downey, with whom he has two children. Downey also has another son, Indio Falconer Downey, born 1993, from his first marriage to Deborah Falconer, from whom he was officially divorced in 2004.\n\n        Robert has jump-started the Team Downey Production Company with wife Susan Downey.",
+                                    "birthCountry": "USA",
+                                    "image": "https://m.media-amazon.com/images/M/MV5BNzg1MTUyNDYxOF5BMl5BanBnXkFtZTgwNTQ4MTE2MjE@._V1_UX214_CR0,0,214,317_AL_.jpg",
+                                    "imdbLink": "https://www.imdb.com/name/nm0000375/",
+                                    "name": "Robert Downey Jr.",
+                                    "birthDate": "1965-04-04T00:00:00.000Z"
+                                }
+                            ]
+                        </code>
+                        <p><b>Data type:</b> json </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Get a single actor by name</td>
+                    <td>/actors/:name</td>
+                    <td>GET</td>
+                    <td>
+                        <p>
+                            <b>Path params:</b> 
+                            <br>name (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /actors/Will Smith
+                            <br>get info about Will Smith
+                        </p>
+                    </td>
+                    <td>N/A</td>
+                    <td>
+                        <code>
+                            {
+                                "occupations": [
+                                    "Actress",
+                                    "Soundtrack",
+                                    "Producer"
+                                ],
+                                "starsIn": [
+                                    "Alien",
+                                    "Alien: Resurrection",
+                                    "Avatar",
+                                    "Galaxy Quest"
+                                ],
+                                "_id": "60939311930017ce2291ae60",
+                                "bio": "Sigourney Weaver was born Susan Alexandra Weaver, on October 8, 1949, in Leroy Hospital in New York City. Her father, TV producer Sylvester L. Weaver Jr., originally wanted to name her Flavia, because of his passion for Roman history (he had already named her elder brother Trajan). Her mother, Elizabeth Inglis, was a British actress who had sacrificed her career for a family. Sigourney grew up in a virtual bubble of guiltless bliss, being taken care by nannies and maids. By 1959, the Weavers had resided in 30 different households. In 1961, Sigourney began attending the Brearly Girls Academy, but her mother moved her to another New York private school, Chapin. Sigourney was quite a bit taller than most of her other classmates (at the age of 13, she was already 5' 10\"), resulting in her constantly being laughed at and picked on; in order to gain their acceptance, she took on the role of class clown.\n\n        In 1962, her family moved to San Francisco briefly, an unpleasant experience for her. Later, they moved back east to Connecticut, where she became a student at the Ethel Walker School, facing the same problems as before. In 1963, she changed her name to \"Sigourney\", after the character \"Sigourney Howard\" in F. Scott Fitzgerald's \"The Great Gatsby\" (her own birth name, Susan, was in honor of her mother's best friend, explorer Susan Pretzlik). Sigourney had already starred in a school drama production of \"A Midsummer Night's Dream\", and, in 1965, she worked during the summer with a stock troupe, performing in \"A Streetcar Named Desire\" and \"You Can't Take It With You\" (she didn't star in the latter because she was taller than the lead actor!). After graduating from school in 1967, she spent some months in a kibbutz at Israel. At that time, she became engaged to reporter Aaron Latham, but they soon broke up.\n\n        In 1969, Sigourney enrolled in Stanford University, majoring in English Literature. She also participated in school plays, especially Japanese Noh plays. By that time she was living in a treehouse, alongside a male friend, dressed in elf-like clothes! After completing her studies in 1971, she applied for the Yale School of Drama in New York. Despite appearing at the audition reading a Bertolt Brecht speech and wearing a rope-like belt, she was accepted by the school but her professors rejected her, because of her height, and kept typecasting her as prostitutes and old women (whereas classmate Meryl Streep was treated almost reverently). However, in 1973, while making her theatrical debut with \"Watergate Classics\", she met up with a team of playwrights and actors and began hanging around with them, resulting in long-term friendships with Christopher Durang, Kate McGregor-Stewart and Albert Innaurato.\n\n        In 1974 she starred in such plays as Aristophanes' \"Frogs\" and Durang's \"The Nature and Purpose of the Universe\" and \"Daryl and Carol and Kenny and Jenny\", as Jenny. After finishing her studies that year, she began seriously pursuing a stage career, but her height kept being a hindrance. However, she continued working on stage with Durang (in \"Titanic\" [1975]) and Innaurato (in \"Gemini\" [1976]). Other 1970s stage works included \"Marco Polo Sing a Song\", \"The Animal Kingdom\", \"A Flea in Her Ear\", \"The Constant Husband\", \"Conjuring an Event\" and others. However, the one that really got her noticed was \"Das Lusitania Songspiel\", a play she co-wrote with Durang and in which she starred for two seasons, from 1979 to 1981. She was also up for a Drama Desk Award for it. During the mid-70s she appeared in several TV spots and even starred as Avis Ryan in the soap opera Somerset (1970).\n\n        In 1977 she was cast in the role Shelley Duvall finally played in Annie Hall (1977), after rejecting the part due to prior stage commitments. In the end, however, Woody Allen offered her a part in the film that, while short (she was onscreen for six seconds), made many people sit up and take notice. She later appeared in Madman (1978) and, of course, Alien (1979). The role of the tough, uncompromising Ripley made Sigourney an \"overnight\" star and brought her a British Award Nomination. She next appeared in Eyewitness (1981) and The Year of Living Dangerously (1982), the latter being a great success in Australia that won an Oscar and brought Sigourney and co-star Mel Gibson to Cannes in 1983. The same year she delivered an honorary Emmy award to her father, a few months before her uncle, actor Doodles Weaver, committed suicide. That year also brought her a romance with Jim Simpson, her first since having broken up two years previously with James M. McClure. She and Simpson were married on 1 October 1984. Sigourney had meanwhile played in the poorly received Deal of the Century (1983) and the mega-hit Ghostbusters (1984). She was also nominated for a Tony Award for her tour-de-force performance in the play \"Hurly Burly\". Then followed One Woman or Two (1985), Half Moon Street (1986) and Aliens (1986). The latter was a huge success, and Sigourney was nominated for both a Golden Globe and an Oscar.\n\n        She then entered her most productive career period and snatched Academy Award nominations, in both Best Actress and Best Supporting Actress categories, for her intense portrayal of Dian Fossey in Gorillas in the Mist (1988) and her delicious performance as a double-crossing, power-hungry corporate executive in Working Girl (1988). She ended up losing in both, but made up for it to a degree by winning both Golden Globes. After appearing in a documentary about fashion photographer Helmut Newton, Helmut Newton: Frames from the Edge (1989), and reprising her role in the sequel Ghostbusters II (1989), she discovered she was pregnant and retired from public life for a while. She gave birth to her daughter Charlotte Simpson on 13 April 1990, and returned to movies as a (now skinhead) Ripley in Alien³ (1992) and a gorgeous Queen Isabella of Spain in 1492: Conquest of Paradise (1992), her second film with director Ridley Scott. She starred in the political comedy Dave (1993) alongside Kevin Kline, and then a Roman Polanski thriller, Death and the Maiden (1994).\n\n        In 1995 she was seen in Jeffrey (1995) and Copycat (1995). The next year she \"trod the boards\" in \"Sex and Longing\", yet another Durang play. She hadn't performed in the theater in many years before that play, her last stage performances occurring in the 1980s in \"As You Like It\" (1981), \"Beyond Therapy\" (1981), \"The Marriage of 'Bette and Boo'\" (1985) and \"The Merchant of Venice\" (1986). In 1997 she was the protagonist in Snow White: A Tale of Terror (1997), The Ice Storm (1997) and Alien: Resurrection (1997). Her performance in \"The Ice Storm\" got her a BAFTA prize and another Golden Globe nod. She also gave excellent performances in A Map of the World (1999) and the sci-fi spoof Galaxy Quest (1999). Her next comedy, Company Man (2000), wasn't quite so warmly welcomed critically and financially, however. She next played a sexy con artist in Heartbreakers (2001) and had a voice role in Big Bad Love (2001). Her father died at the age of 93. Sigourney herself has recently starred in Tadpole (2002) and is planning a cinematic version of The Guys (2002), the enthralling September 11th one-act drama she played on stage on late 2001. At age 60, she played a crucial role in Avatar (2009), which became the top box-office hit of all time. The film reunited her with her \"Aliens\" director James Cameron. Her beauty, talent, and hard-work keeps the ageless actress going, and she has continued to win respect from her fans and directors.",
+                                "birthCountry": "USA",
+                                "image": "https://m.media-amazon.com/images/M/MV5BMTk1MTcyNTE3OV5BMl5BanBnXkFtZTcwMTA0MTMyMw@@._V1_UY317_CR12,0,214,317_AL_.jpg",
+                                "imdbLink": "https://www.imdb.com/name/nm0000244/",
+                                "name": "Sigourney Weaver",
+                                "birthDate": "1949-10-08T00:00:00.000Z"
+                            }
+                        </code>
+                        <p><b>Data type:</b> json </p>
                     </td>
                 </tr>
             </tbody>
@@ -163,7 +431,7 @@
                     <th>Description</th>
                     <th>URL</th>
                     <th>HTTP Method</th>
-                    <th>Query Parameters</th>
+                    <th>Query/Path Parameters</th>
                     <th>Request Format</th>
                     <th>Response Format</th>
                 </tr>
@@ -178,56 +446,147 @@
                         <code>
                             {
                                 "birthdate": "1990-01-22",
-                                "username": "username", (required)
+                                "username": "janedoe123", (required, min. 6 characters, only alphanumeric characters)
                                 "password": "password", (required)
                                 "email": "janedoe@example.com" (required)
                             }
                         </code>
-                        <p>Data must be in json format</p>
+                        <p><b>Data type:</b> json</p>
                     </td>
                     <td>
                         <code>
                             {
-                                "_id": "7088b2e34fe1a44fbe0a407e",
-                                "birthdate": "1990-01-22",
-                                "email": "janedoe@example.com",
+                                "favoriteActors": [],
                                 "favoriteMovies": [],
-                                "password": "password",
-                                "username": "janedoe"
+                                "toWatchMovies": [],
+                                "_id": "6096ded32b34225d4b5efb26",
+                                "username": "janedoe",
+                                "email": "janedoe@example.com",
+                                "password": "$2b$10$N5gSy25pkYcHk9l7twNFu.5wCo3nD3LQuH8qK09nqOonsN9lOZ3rC"
                             }
                         </code>
-                        <p>Data will be returned in json format</p>
+                        <p><b>Data type:</b> json</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Get user's info</td>
+                    <td>/users/:id</td>
+                    <td>GET</td>
+                    <td>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>id (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /users/7088b2e34fe1a44fbe0a407e
+                            <br>get info for user with id 7088b2e34fe1a44fbe0a407e
+                        </p>
+                    </td>
+                    <td>N/A</td>
+                    <td>
+                        <code>
+                            {
+                                "favoriteActors": [],
+                                "favoriteMovies": [],
+                                "toWatchMovies": [],
+                                "username": "sallydoe",
+                                "email": "sallydoe@example.com",
+                                "password": "$2b$10$i/8MIFxoqUMbDfmyM8ql0un1ILicH3n14WHXX6kSZ.8QC4exK0UyG"
+                            }
+                        </code>
+                        <p><b>Data type:</b> json</p>
                     </td>
                 </tr>
                 <tr>
                     <td>Update user's info (username, password, email, date of birth)</td>
                     <td>/users/:id</td>
                     <td>PATCH</td>
-                    <td>id (required)</td>
                     <td>
-                        <code>
-                            {
-                                "username": "name",
-                                "email": "johndoe@example.com"
-                            }
-                        </code>
-                        <code>
-                            {"password": "password"}
-                        </code>
-                        <p>Data must be in json format</p>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>id (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /users/7088b2e34fe1a44fbe0a407e
+                            <br>update info for user with id 7088b2e34fe1a44fbe0a407e
+                        </p>
                     </td>
                     <td>
                         <code>
                             {
-                                "_id": "7088b2e34fe1a44fbe0a407e",
-                                "birthdate": "1990-01-22",
-                                "email": "johndoe@example.com", 
-                                "favoriteMovies": [],
-                                "password": "password",
-                                "username": "janedoe"
+                                "birthDate": "1990-01-22", (optional)
+                                "username": "janedoe123", (optional, min. 6 characters, only alphanumeric characters) 
+                            }
+                        </code>  
+                        <p><b>Data type:</b> json</p>                      
+                    </td>
+                    <td>
+                        <code>
+                            {
+                                "birthDate": "1990-01-22", 
+                                "username": "janedoe123", 
                             }
                         </code>                    
-                        <p>Data will be returned in json format</p>
+                        <p><b>Data type:</b> json</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Get user's favorite movies</td>
+                    <td>/users/:id/favorite-movies</td>
+                    <td>GET</td>
+                    <td>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>id (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /users/7088b2e34fe1a44fbe0a407e/favorite-movies
+                            <br>get list of favorite movies for user with id 7088b2e34fe1a44fbe0a407e
+                        </p>
+                    </td>
+                    <td>N/A</td>
+                    <td>
+                        <code>
+                            [
+                                {
+                                    "genre": {
+                                        "description": "Animation is a method in which figures are manipulated to appear as moving images. In traditional animation, images are drawn or painted by hand on transparent celluloid sheets to be photographed and exhibited on film.",
+                                        "name": "Animation",
+                                        "wikipediaLink": "https://en.wikipedia.org/wiki/Animation"
+                                    },
+                                    "director": {
+                                        "bio": "Although born in Hollywood John and his twin sister, Johanna were raised in Wittier near Los Angeles. His parents were Jewell Mae (Risley), an art teacher, and Paul Eual Lasseter, a parts manager at a Chevrolet dealership. His mother's profession contributed to his interest in animation and particularly the Bugs Bunny and Daffy Duck cartoons which he would watch on television. It was when he was in High School that he realized that he could have a career in animation and he wrote to the Walt Disney Studios but nothing happened then In 1975 the Disney company started an animation course at Calarts - The California Institute of the Arts- and John, with encouragement from his mother, was one of the first to sign up. He and his class mates, who included the future animators and directors Brad Bird, and Tim Burton were taught by some of Disney's veteran animators such as Ollie Johnston and Frank Thomas. During his time there John produced two animated shorts - Lady and the Lamp (1979) and Nitemare (1980) - which both won the Student Academy Award for Animation. On graduating in 1979 John was taken on as an animator at the Disney Studios. In 1983, while working on Mickey's Christmas Carol some friends invited him to see some footage of Tron that they were working on using CGI and he immediately saw the potential of it to enhance animated films. John and a colleague made a short test film and satisfied with the result and full of enthusiasm started work on a feature without consulting their superiors who when they found out about it canceled it and sacked John. Having made contacts in the computer industry he was quickly taken on by Lucasfilm which was bought by Steve Jobs for $5 million with a further $5 million invested as working capital and the company renamed Pixar. John soon convinced Steve that the future lay in computer animation by bringing his desk lamp to life in the short 'Luxor Jr' which was shown at a computer graphics conference and got a standing ovation. The first computer animated feature soon followed in the form of 'Toy Story' winning John an Oscar for Special Achievement to go with one he got for Animated Short Film - Tin Toy. He's also had Oscar nominations for Animated Feature - Monster Inc and Cars, Original Screenplay -Toy Story, Animated Short Story - Luxor Jr while the short Knick Knack was selected by Terry Gilliam as one of the best 10 animated films of all time. In 2008, he was honored with the Winsor McCay Award, - the lifetime achievement award for animators. He oversees 3 animation studios - Pixar, Disney Animation and DisneyToon He spent 9 year (2005 - 2014) on the board of governors of the Academy of Motion Picture Arts and Sciences, only relinquishing his seat due to term limits. He was presented with a star on the Hollywood Walk of Fame in Hollywood in November 2011.",
+                                        "birth_year": 1957,
+                                        "death_year": null,
+                                        "name": "John Lasseter",
+                                        "imdbLink": "https://www.imdb.com/name/nm0005124/"
+                                    },
+                                    "_id": "6088a1e84fe1a44fbe0a407f",
+                                    "description": "A cowboy doll is profoundly threatened and jealous when a new spaceman figure supplants him as top toy in a boy's room.",
+                                    "featured": false,
+                                    "image": "https://m.media-amazon.com/images/M/MV5BMDU2ZWJlMjktMTRhMy00ZTA5LWEzNDgtYmNmZTEwZTViZWJkXkEyXkFqcGdeQXVyNDQ2OTk4MzI@._V1_UX182_CR0,0,182,268_AL_.jpg",
+                                    "imdbLink": "https://www.imdb.com/title/tt0114709/",
+                                    "name": "Toy Story",
+                                    "rating": 8.3,
+                                    "releaseYear": 1995,
+                                    "stars": [
+                                        {
+                                            "actor": "Tom Hanks",
+                                            "character": "Woody"
+                                        },
+                                        {
+                                            "actor": "Tim Allen",
+                                            "character": "Buzz Lightyear"
+                                        },
+                                        {
+                                            "actor": "Don Rickles",
+                                            "character": "Mr. Potato Head"
+                                        }
+                                    ]
+                                }
+                            ]
+                        </code>                    
+                        <p><b>Data type:</b> json</p>
                     </td>
                 </tr>
                 <tr>
@@ -235,16 +594,25 @@
                     <td>/users/:id/favorite-movies/:movie_id</td>
                     <td>PATCH</td>
                     <td>
-                        <p>id (required)</p>
-                        <p>movie_id (required)</p>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>id (required, case-sensitive)
+                            <br>movie_id (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /users/7088b2e34fe1a44fbe0a407e/favorite-movies/9088b2e35fe5a44fde0a407s
+                            <br>add Item with id 9088b2e35fe5a44fde0a407s to list of favorite movies for user with id 7088b2e34fe1a44fbe0a407e
+                        </p>
                     </td>
                     <td>
-                        { "movie_id": "5088a2e34fe1a44fbe0a407e"} (required)
-                        <p>Data must be in json format</p>
+                        <code>
+                            { "movie_id": "5088a2e34fe1a44fbe0a407e"} (required, case-sensitive)     
+                        </code>                        
+                        <p><b>Data type:</b> json</p>                   
                     </td>
                     <td>
-                        <p>"name" has been added</p>
-                        <p>Data will be returned in text format</p>
+                        <p>Item with ID 5088a2e34fe1a44fbe0a407e has been added to your favoriteMovies list.</p> 
+                        <p><b>Data type:</b> text</p>                                          
                     </td>
                 </tr>
                 <tr>
@@ -252,27 +620,267 @@
                     <td>/users/:id/favorite-movies/:movie_id</td>
                     <td>DELETE</td>
                     <td>
-                        <p>id (required)</p>
-                        <p>movie_id (required)</p>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>id (required, case-sensitive)
+                            <br>movie_id (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /users/7088b2e34fe1a44fbe0a407e/favorite-movies/9088b2e35fe5a44fde0a407s
+                            <br>remove Item with id 9088b2e35fe5a44fde0a407s to list of favorite movies for user with id 7088b2e34fe1a44fbe0a407e
+                        </p> 
                     </td>
                     <td>
-                        {"movie_id": "5088a2e34fe1a44fbe0a407e" (required)}
-                        <p>Data must be in json format</p>
+                        <code>
+                            { "movie_id": "5088a2e34fe1a44fbe0a407e"} (required, case-sensitive)     
+                        </code>                        
+                        <p><b>Data type:</b> json</p>
                     </td>
                     <td>
-                        <p>Movie with ID 5088a2e34fe1a44fbe0a407e has been removed</p>
-                        <p>Data will be returned in text format</p>
+                        <p>Item with ID 5088a2e34fe1a44fbe0a407e has been removed from your favoriteMovies list.</p>                        
+                        <p><b>Data type:</b> text</p>                                          
+                    </td>
+                </tr>
+                <tr>
+                    <td>Get users to watch movies</td>
+                    <td>/users/:id/to-watch-movies</td>
+                    <td>GET</td>
+                    <td>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>id (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /users/7088b2e34fe1a44fbe0a407e/to-watch-movies
+                            <br>get list of to watch movies for user with id 7088b2e34fe1a44fbe0a407e
+                        </p>
+                    </td>
+                    <td>N/A</td>
+                    <td>
+                        <code>
+                            [
+                                {
+                                    "genre": {
+                                        "description": "Animation is a method in which figures are manipulated to appear as moving images. In traditional animation, images are drawn or painted by hand on transparent celluloid sheets to be photographed and exhibited on film.",
+                                        "name": "Animation",
+                                        "wikipediaLink": "https://en.wikipedia.org/wiki/Animation"
+                                    },
+                                    "director": {
+                                        "bio": "Although born in Hollywood John and his twin sister, Johanna were raised in Wittier near Los Angeles. His parents were Jewell Mae (Risley), an art teacher, and Paul Eual Lasseter, a parts manager at a Chevrolet dealership. His mother's profession contributed to his interest in animation and particularly the Bugs Bunny and Daffy Duck cartoons which he would watch on television. It was when he was in High School that he realized that he could have a career in animation and he wrote to the Walt Disney Studios but nothing happened then In 1975 the Disney company started an animation course at Calarts - The California Institute of the Arts- and John, with encouragement from his mother, was one of the first to sign up. He and his class mates, who included the future animators and directors Brad Bird, and Tim Burton were taught by some of Disney's veteran animators such as Ollie Johnston and Frank Thomas. During his time there John produced two animated shorts - Lady and the Lamp (1979) and Nitemare (1980) - which both won the Student Academy Award for Animation. On graduating in 1979 John was taken on as an animator at the Disney Studios. In 1983, while working on Mickey's Christmas Carol some friends invited him to see some footage of Tron that they were working on using CGI and he immediately saw the potential of it to enhance animated films. John and a colleague made a short test film and satisfied with the result and full of enthusiasm started work on a feature without consulting their superiors who when they found out about it canceled it and sacked John. Having made contacts in the computer industry he was quickly taken on by Lucasfilm which was bought by Steve Jobs for $5 million with a further $5 million invested as working capital and the company renamed Pixar. John soon convinced Steve that the future lay in computer animation by bringing his desk lamp to life in the short 'Luxor Jr' which was shown at a computer graphics conference and got a standing ovation. The first computer animated feature soon followed in the form of 'Toy Story' winning John an Oscar for Special Achievement to go with one he got for Animated Short Film - Tin Toy. He's also had Oscar nominations for Animated Feature - Monster Inc and Cars, Original Screenplay -Toy Story, Animated Short Story - Luxor Jr while the short Knick Knack was selected by Terry Gilliam as one of the best 10 animated films of all time. In 2008, he was honored with the Winsor McCay Award, - the lifetime achievement award for animators. He oversees 3 animation studios - Pixar, Disney Animation and DisneyToon He spent 9 year (2005 - 2014) on the board of governors of the Academy of Motion Picture Arts and Sciences, only relinquishing his seat due to term limits. He was presented with a star on the Hollywood Walk of Fame in Hollywood in November 2011.",
+                                        "birth_year": 1957,
+                                        "death_year": null,
+                                        "name": "John Lasseter",
+                                        "imdbLink": "https://www.imdb.com/name/nm0005124/"
+                                    },
+                                    "_id": "6088a1e84fe1a44fbe0a407f",
+                                    "description": "A cowboy doll is profoundly threatened and jealous when a new spaceman figure supplants him as top toy in a boy's room.",
+                                    "featured": false,
+                                    "image": "https://m.media-amazon.com/images/M/MV5BMDU2ZWJlMjktMTRhMy00ZTA5LWEzNDgtYmNmZTEwZTViZWJkXkEyXkFqcGdeQXVyNDQ2OTk4MzI@._V1_UX182_CR0,0,182,268_AL_.jpg",
+                                    "imdbLink": "https://www.imdb.com/title/tt0114709/",
+                                    "name": "Toy Story",
+                                    "rating": 8.3,
+                                    "releaseYear": 1995,
+                                    "stars": [
+                                        {
+                                            "actor": "Tom Hanks",
+                                            "character": "Woody"
+                                        },
+                                        {
+                                            "actor": "Tim Allen",
+                                            "character": "Buzz Lightyear"
+                                        },
+                                        {
+                                            "actor": "Don Rickles",
+                                            "character": "Mr. Potato Head"
+                                        }
+                                    ]
+                                }
+                            ]
+                        </code>                    
+                        <p><b>Data type:</b> json</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Add a movie to user's to watch movies list</td>
+                    <td>/users/:id/to-watch-movies/:movie_id</td>
+                    <td>PATCH</td>
+                    <td>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>id (required, case-sensitive)
+                            <br>movie_id (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /users/7088b2e34fe1a44fbe0a407e/to-watch-movies/9088b2e35fe5a44fde0a407s
+                            <br>add Item with id 9088b2e35fe5a44fde0a407s to list of to watch movies for user with id 7088b2e34fe1a44fbe0a407e
+                        </p>
+                    </td>
+                    <td>
+                        <code>
+                            { "movie_id": "5088a2e34fe1a44fbe0a407e"} (required, case-sensitive)     
+                        </code>                        
+                        <p><b>Data type:</b> json</p>                   
+                    </td>
+                    <td>
+                        <p>Item with ID 5088a2e34fe1a44fbe0a407e has been added to your toWatchMovies list.</p> 
+                        <p><b>Data type:</b> text</p>                                          
+                    </td>
+                </tr>
+                <tr>
+                    <td>Remove a movie from user's to watch movies list</td>
+                    <td>/users/:id/to-watch-movies/:movie_id</td>
+                    <td>DELETE</td>
+                    <td>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>id (required, case-sensitive)
+                            <br>movie_id (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /users/7088b2e34fe1a44fbe0a407e/to-watch-movies/9088b2e35fe5a44fde0a407s
+                            <br>remove Item with id 9088b2e35fe5a44fde0a407s to list of to watch movies for user with id 7088b2e34fe1a44fbe0a407e
+                        </p> 
+                    </td>
+                    <td>
+                        <code>
+                            { "movie_id": "5088a2e34fe1a44fbe0a407e"} (required, case-sensitive)     
+                        </code>                        
+                        <p><b>Data type:</b> json</p>
+                    </td>
+                    <td>
+                        <p>Item with ID 5088a2e34fe1a44fbe0a407e has been removed from your toWatchMovies list.</p>                        
+                        <p><b>Data type:</b> text</p>                                          
+                    </td>
+                </tr>
+                <tr>
+                    <td>Get user's favorite actors list</td>
+                    <td>/users/:id/favorite-actors</td>
+                    <td>GET</td>
+                    <td>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>id (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /users/7088b2e34fe1a44fbe0a407e/favorite-actors
+                            <br>get list of favorite actors for user with id 7088b2e34fe1a44fbe0a407e
+                        </p>
+                    </td>
+                    <td>N/A</td>
+                    <td>
+                        <code>
+                            [
+                                {
+                                    "genre": {
+                                        "description": "Animation is a method in which figures are manipulated to appear as moving images. In traditional animation, images are drawn or painted by hand on transparent celluloid sheets to be photographed and exhibited on film.",
+                                        "name": "Animation",
+                                        "wikipediaLink": "https://en.wikipedia.org/wiki/Animation"
+                                    },
+                                    "director": {
+                                        "bio": "Although born in Hollywood John and his twin sister, Johanna were raised in Wittier near Los Angeles. His parents were Jewell Mae (Risley), an art teacher, and Paul Eual Lasseter, a parts manager at a Chevrolet dealership. His mother's profession contributed to his interest in animation and particularly the Bugs Bunny and Daffy Duck cartoons which he would watch on television. It was when he was in High School that he realized that he could have a career in animation and he wrote to the Walt Disney Studios but nothing happened then In 1975 the Disney company started an animation course at Calarts - The California Institute of the Arts- and John, with encouragement from his mother, was one of the first to sign up. He and his class mates, who included the future animators and directors Brad Bird, and Tim Burton were taught by some of Disney's veteran animators such as Ollie Johnston and Frank Thomas. During his time there John produced two animated shorts - Lady and the Lamp (1979) and Nitemare (1980) - which both won the Student Academy Award for Animation. On graduating in 1979 John was taken on as an animator at the Disney Studios. In 1983, while working on Mickey's Christmas Carol some friends invited him to see some footage of Tron that they were working on using CGI and he immediately saw the potential of it to enhance animated films. John and a colleague made a short test film and satisfied with the result and full of enthusiasm started work on a feature without consulting their superiors who when they found out about it canceled it and sacked John. Having made contacts in the computer industry he was quickly taken on by Lucasfilm which was bought by Steve Jobs for $5 million with a further $5 million invested as working capital and the company renamed Pixar. John soon convinced Steve that the future lay in computer animation by bringing his desk lamp to life in the short 'Luxor Jr' which was shown at a computer graphics conference and got a standing ovation. The first computer animated feature soon followed in the form of 'Toy Story' winning John an Oscar for Special Achievement to go with one he got for Animated Short Film - Tin Toy. He's also had Oscar nominations for Animated Feature - Monster Inc and Cars, Original Screenplay -Toy Story, Animated Short Story - Luxor Jr while the short Knick Knack was selected by Terry Gilliam as one of the best 10 animated films of all time. In 2008, he was honored with the Winsor McCay Award, - the lifetime achievement award for animators. He oversees 3 animation studios - Pixar, Disney Animation and DisneyToon He spent 9 year (2005 - 2014) on the board of governors of the Academy of Motion Picture Arts and Sciences, only relinquishing his seat due to term limits. He was presented with a star on the Hollywood Walk of Fame in Hollywood in November 2011.",
+                                        "birth_year": 1957,
+                                        "death_year": null,
+                                        "name": "John Lasseter",
+                                        "imdbLink": "https://www.imdb.com/name/nm0005124/"
+                                    },
+                                    "_id": "6088a1e84fe1a44fbe0a407f",
+                                    "description": "A cowboy doll is profoundly threatened and jealous when a new spaceman figure supplants him as top toy in a boy's room.",
+                                    "featured": false,
+                                    "image": "https://m.media-amazon.com/images/M/MV5BMDU2ZWJlMjktMTRhMy00ZTA5LWEzNDgtYmNmZTEwZTViZWJkXkEyXkFqcGdeQXVyNDQ2OTk4MzI@._V1_UX182_CR0,0,182,268_AL_.jpg",
+                                    "imdbLink": "https://www.imdb.com/title/tt0114709/",
+                                    "name": "Toy Story",
+                                    "rating": 8.3,
+                                    "releaseYear": 1995,
+                                    "stars": [
+                                        {
+                                            "actor": "Tom Hanks",
+                                            "character": "Woody"
+                                        },
+                                        {
+                                            "actor": "Tim Allen",
+                                            "character": "Buzz Lightyear"
+                                        },
+                                        {
+                                            "actor": "Don Rickles",
+                                            "character": "Mr. Potato Head"
+                                        }
+                                    ]
+                                }
+                            ]
+                        </code>                    
+                        <p><b>Data type:</b> json</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Add a actor to user's favoriteActors list</td>
+                    <td>/users/:id/favorite-actors/:actor_id</td>
+                    <td>PATCH</td>
+                    <td>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>id (required, case-sensitive)
+                            <br>actor_id (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /users/7088b2e34fe1a44fbe0a407e/favorite-actors/9088b2e35fe5a44fde0a407s
+                            <br>add Item with id 9088b2e35fe5a44fde0a407s to list of favoriteActors for user with id 7088b2e34fe1a44fbe0a407e
+                        </p>
+                    </td>
+                    <td>
+                        <code>
+                            { "actor_id": "5088a2e34fe1a44fbe0a407e"} (required, case-sensitive)     
+                        </code>                        
+                        <p><b>Data type:</b> json</p>                   
+                    </td>
+                    <td>
+                        <p>Item with ID 5088a2e34fe1a44fbe0a407e has been added to your favoriteActors list.</p> 
+                        <p><b>Data type:</b> text</p>                                          
+                    </td>
+                </tr>
+                <tr>
+                    <td>Remove a actor from user's favoriteActors list</td>
+                    <td>/users/:id/favorite-actors/:actor_id</td>
+                    <td>DELETE</td>
+                    <td>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>id (required, case-sensitive)
+                            <br>actor_id (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /users/7088b2e34fe1a44fbe0a407e/to-watch-actors/9088b2e35fe5a44fde0a407s
+                            <br>remove Item with id 9088b2e35fe5a44fde0a407s to list of favoriteActors for user with id 7088b2e34fe1a44fbe0a407e
+                        </p> 
+                    </td>
+                    <td>
+                        <code>
+                            { "actor_id": "5088a2e34fe1a44fbe0a407e"} (required, case-sensitive)     
+                        </code>                        
+                        <p><b>Data type:</b> json</p>
+                    </td>
+                    <td>
+                        <p>Item with ID 5088a2e34fe1a44fbe0a407e has been removed from your favoriteActors list.</p>                        
+                        <p><b>Data type:</b> text</p>                                          
                     </td>
                 </tr>
                 <tr>
                     <td>Delete a user</td>
                     <td>/users/:id</td>
                     <td>DELETE</td>
-                    <td>id (required)</td>
+                    <td>
+                        <p>
+                            <b>Path params:</b>  
+                            <br>id (required, case-sensitive)
+                        </p>
+                        <p> 
+                            <b>Example:</b> /users/7088b2e34fe1a44fbe0a407e
+                            <br>remove user with id 7088b2e34fe1a44fbe0a407e
+                        </p>
+                    </td>
                     <td>N/A</td>
                     <td>
-                        <p>"User with ID 7088b2e34fe1a44fbe0a407e has been deleted"</p>
-                        <p>Data will be returned in text format</p>
+                        <p>User with ID 7088b2e34fe1a44fbe0a407e has been removed.</p>
+                        <p><b>Data type:</b> text</p>
                     </td>
                 </tr>
             </tbody>

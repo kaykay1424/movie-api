@@ -22,6 +22,11 @@ passport.use(new LocalStrategy({
             console.log('incorrect username');
             return callback(null, false, {message: 'Incorrect username or password.'});
         }
+
+        if (!user.validatePassword(password)) {
+            console.log('incorrect password');
+            return callback(null, false, {message: 'Incorrect password.'});
+        }
     
         console.log('finished');
         return callback(null, user);
@@ -30,10 +35,10 @@ passport.use(new LocalStrategy({
     
 passport.use(new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-    secretOrKey: 'your_jwt_secret'
-    }, (jwtPayload, callback) => {
+    secretOrKey: process.env.jwtSecret
+    }, (jwtPayload, callback) => {       
         return Users.findById(jwtPayload._id)
-        .then((user) => {
+        .then((user) => { 
             return callback(null, user);
         })
         .catch((error) => {
