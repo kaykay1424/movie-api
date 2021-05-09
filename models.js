@@ -1,5 +1,9 @@
+/*********  Modules *********/
+
 const bcrypt = require('bcrypt'),
-mongoose = require('mongoose');
+    mongoose = require('mongoose');
+
+/********* Schemas *********/ 
 
 const actorSchema = mongoose.Schema({
     bio: {
@@ -35,18 +39,6 @@ const actorSchema = mongoose.Schema({
     occupations: [{ type: String}],
     starsIn: [{ type: String}]
 });
-
-const movieActorsSubSchema = mongoose.Schema({
-    actors: [
-        {
-            character: String/*,
-            name: { 
-                type: String,
-                required: true
-            }   */         
-        }
-    ]
-}, {_id: false});
 
 const movieSchema = mongoose.Schema({
     name: {
@@ -128,6 +120,8 @@ const userSchema = mongoose.Schema({
     ]
 });
 
+/******** Methods/Statics ********/
+
 userSchema.statics.hashPassword = (password) => {
     return bcrypt.hashSync(password, 10);
 };
@@ -135,10 +129,14 @@ userSchema.statics.hashPassword = (password) => {
 userSchema.methods.validatePassword = function(password) {
     return bcrypt.compareSync(password, this.password);
 };
+
+/********** Models ***********/
   
 const Actor = mongoose.model('Actor', actorSchema);
 const Movie = mongoose.model('Movie', movieSchema);
 const User = mongoose.model('User', userSchema);
+
+/********** Exports **********/
 
 module.exports.Actor = Actor;
 module.exports.Movie = Movie;

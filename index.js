@@ -1,6 +1,6 @@
-// Modules
+/********* Modules ********/
 
-const { check, validationResult, body } = require('express-validator'),
+const { check, validationResult} = require('express-validator'),
     cors = require('cors'),
     dotenv = require('dotenv'),
     express = require('express'),
@@ -8,19 +8,20 @@ const { check, validationResult, body } = require('express-validator'),
     Models = require('./models.js'),
     mongoose = require('mongoose'),
     morgan = require('morgan'),
-    passport = require('passport')  
+    passport = require('passport');  
 
 const port = process.env.PORT || 8080;
 
 dotenv.config({path: __dirname + '/.env'});
 
-// Helper functions
-const findRecord = helpers.findRecord;
-const findRecords = helpers.findRecords;
-const getList = helpers.getList;
-const editList = helpers.editList;
+/********** Helper functions **********/
 
-// Mongoose models
+const findRecord = helpers.findRecord,
+    findRecords = helpers.findRecords,
+    getList = helpers.getList,
+    editList = helpers.editList;
+
+/********** Mongoose ***********/
 
 const Actors = Models.Actor,
     Movies = Models.Movie,
@@ -36,23 +37,27 @@ mongoose.connect(process.env.MONGO_DB_URL,
 
 const app = express();
 
-// Middlewares
+/*********** Middlewares ***********/
 
 app.use(cors()); // allow requests to all domains
 app.use(express.json()); // parses requests into json
 app.use(morgan('common')); // log requests
 app.use(express.static('public')); // serve static files in public folder
 // Error handler
-app.use((err, req, res, next) => {
-    console.log(err.stack);
-    res.sendStatus(500).send('An error has ocurred!');
+app.use((err, req, res, next) => { // eslint-disable-line
+    console.log(err.stack); // eslint-disable-line
+    res.status(500).send('An error has ocurred!');
 });
 
 require('./passport');
 
-// Routes
+/*********** Routes ***********/
 
-    // Actors
+app.get('/',(req, res) => {
+    res.status(200).send('Welcome to the Movies API');
+});
+
+/*********** -Actors ***********/
 
 // Get a list of all actors 
 app.get('/actors', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -71,11 +76,7 @@ app.get('/actors/:name', passport.authenticate('jwt', { session: false }), (req,
     findRecord(res, Actors, {name: req.params.name}); 
 });
 
-    // Movies
-
-app.get('/',(req, res) => {
-    res.status(200).send('Welcome to the Movies API');
-});
+/*********** -Movies ***********/
 
 // Get a list of all movies 
 app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -90,38 +91,37 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) 
 
 // Get a list of featured movies 
 app.get('/featured-movies', passport.authenticate('jwt', { session: false }), (req, res) => { 
-    Movies.find({featured: true}, {_id: 0, name: 1})
-    .then((results) => {
+    Movies.find({featured: true}, {_id: 0, name: 1}).then((results) => {
         if (!results) return res.status(400).send('No results found');
+        // create array of movie names
         results = results.map(result => {
             return result.name;
         });        
         res.status(200).json(results);
     }).catch((err) => {
-        console.error(err);
+        console.error(err); // eslint-disable-line
         res.status(500).send(err);
     });   
 });
 
 // Get movies favorited by users
 app.get('/favorite-movies', passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.find({}, {favoriteMovies: 1} )
-    .populate('favoriteMovies', 'name-_id').exec((err, results) => {
-        let favoriteMoviesObject = {};
-        let favoriteMoviesArray = [];
+    Users.find({}, {favoriteMovies: 1} ).populate('favoriteMovies', 'name-_id').exec((err, results) => {
+        const favoriteMoviesObject = {};
+        const favoriteMoviesArray = [];
 
         // get number of favorites by users for each movie
         results.forEach((result) => {
             result.favoriteMovies.forEach(({name}) => {
                 // add 1 each time movie appears
                 favoriteMoviesObject[name]
-                ? favoriteMoviesObject[name] = favoriteMoviesObject[name] + 1
-                : favoriteMoviesObject[name] = 1;
-            })
+                    ? favoriteMoviesObject[name] = favoriteMoviesObject[name] + 1
+                    : favoriteMoviesObject[name] = 1;
+            });
         });
 
         // convert favoriteMoviesObject into array to sort movies by number of favorites by users
-        for (let movie in favoriteMoviesObject) {
+        for (const movie in favoriteMoviesObject) {
             favoriteMoviesArray.push({
                 name: movie,
                 usersFavorited: favoriteMoviesObject[movie]
@@ -157,73 +157,70 @@ app.get('/directors/:name', passport.authenticate('jwt', { session: false }), (r
     findRecord(res, Movies, {'director.name': req.params.name}, {'director': 1, '_id': 0});            
 });
 
-    // Users
+/*********** -Users ***********/
 
 require('./auth')(app); // login route
 
 // Create a new user
 app.post('/users', 
-// Validation logic
-[
-    check('username', 'Username is required').not().isEmpty(),
-    check('username', 'Username must have at least 6 characters').optional().isLength({min: 6}),
-    check('username', 'Username can only contain alphanumeric characters').optional().isAlphanumeric(),
-    check('password', 'Password is required').not().isEmpty(),
-    check('email', 'Email is required').not().isEmpty(),
-    check('email', 'Email does not appear to be valid').optional().isEmail(),
-    check('birthDate', 'birthDate is not valid').optional().isDate(),
-    
-], (req, res) => {
+    // Validation logic
+    [
+        check('username', 'username is required').not().isEmpty(),
+        check('username', 'username must have at least 6 characters').optional().isLength({min: 6}),
+        check('username', 'username can only contain alphanumeric characters').optional().isAlphanumeric(),
+        check('password', 'password is required').not().isEmpty(),
+        check('email', 'email is required').not().isEmpty(),
+        check('email', 'email does not appear to be valid').optional().isEmail(),
+        check('birthDate', 'birthDate is not valid').optional().isDate(),
+        
+    ], (req, res) => {
 
-    const errors = validationResult(req);
-    // Check if there are validation errors
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
+        const errors = validationResult(req);
+        // Check if there are validation errors
+        if (!errors.isEmpty()) return res.status(422).json({ errors: errors.array() });
 
-    const user = req.body;
-    const hashedPassword = Users.hashPassword(req.body.password);
-    // Check if user with that email already exists
-    Users.findOne({'email': req.body.email})
-    .then((existingUser) => {
-        if (existingUser) return res.status(400).send('Sorry, a user with that email address already exists. Please use another email address.');    
-        user['password'] = hashedPassword;
-        Users.create(user)
-        .then((newUser) => {
-            // convert document to object so version key property can be removed as user does not need this info
-            newUser = newUser.toObject();
-            delete newUser["__v"];
+        const user = req.body,
+            hashedPassword = Users.hashPassword(req.body.password);
+        // Check if user with that email already exists
+        Users.findOne({'email': req.body.email}).then((existingUser) => {
+            if (existingUser) return res.status(400).send('Sorry, a user with that email address already exists. Please use another email address.');    
+            
+            user['password'] = hashedPassword;
+            Users.create(user).then((newUser) => {
+                // convert document to object so version key property can be removed as user does not need this info
+                newUser = newUser.toObject();
+                delete newUser['__v'];
 
-            res.status(201).json(newUser);
+                res.status(201).json(newUser);
+            }).catch((err) => {
+                console.error(err); // eslint-disable-line
+                res.status(500).send(err);
+            });        
         }).catch((err) => {
-            console.error(err);
+            console.error(err); // eslint-disable-line
             res.status(500).send(err);
-        });        
-    }).catch((err) => {
-        console.error(err);
-        res.status(500).send(err);
-    });    
-});
+        });    
+    }
+);
 
 // Delete a user
 app.delete('/users/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
     const id = req.params.id;
     const filter = {_id: id};
 
-    // Check if user exists
-    Users.findOne(filter)
-    .then((existingUser) => {
-        if (!existingUser) return res.status(400).send('Sorry, that user doesn\'t exist.');            
-        Users.findOneAndDelete(filter)
-        .then((result) => {
-            console.log(result)
+    // Make sure user id used belongs to the user that is logged in
+    if (filter._id !== String(req.user._id)) return res.status(400).send('You cannot edit this user\'s info');
+
+    // Find user
+    Users.findOne(filter).then(() => {            
+        Users.findOneAndDelete(filter).then(() => {
             res.status(200).send(`User with ID ${id} has been removed.`);
         }).catch((err) => {
-            console.error(err);
+            console.error(err); // eslint-disable-line
             res.status(500).send(err);
         });        
     }).catch((err) => {
-        console.error(err);
+        console.error(err); // eslint-disable-line
         res.status(500).send(err);
     });   
 });
@@ -235,50 +232,51 @@ app.get('/users/:id', passport.authenticate('jwt', { session: false }), (req, re
 
 // Update user's info
 app.patch('/users/:id', // Validation logic
-[
-    check('username', 'username must have at least 6 characters').optional().isLength({min: 6}),
-    check('username', 'username can only contain alphanumeric characters.').optional().isAlphanumeric(),
-    check('email', 'email does not appear to be valid').optional().isEmail(),
-    check('birthDate', 'birthDate is not valid').optional().isDate()
-], passport.authenticate('jwt', { session: false }), (req, res) => {
-    const errors = validationResult(req);
-    // Check if there are validation errors
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
+    [
+        check('username', 'username must have at least 6 characters').optional().isLength({min: 6}),
+        check('username', 'username can only contain alphanumeric characters.').optional().isAlphanumeric(),
+        check('email', 'email does not appear to be valid').optional().isEmail(),
+        check('birthDate', 'birthDate is not valid').optional().isDate()
+    ], passport.authenticate('jwt', { session: false }), (req, res) => {
+        const errors = validationResult(req);
+        // Check if there are validation errors
+        if (!errors.isEmpty()) return res.status(422).json({ errors: errors.array() });
     
-    const user = req.body; 
-    const filter = {_id: req.params.id};
+        const user = req.body,
+            filter = {_id: req.params.id};
 
-    // Check if user exists
-    Users.findOne(filter)
-    .then((existingUser) => {
-        if (!existingUser) return res.status(400).send('Sorry, that user doesn\'t exist.');    
-        Users.findOneAndUpdate(filter, {$set: user}, {new: true })
-        .then((updatedUser) => {
-            // convert document to object so version key property can be removed as user does not need this info
-            updatedUser = updatedUser.toObject();
-            delete updatedUser["__v"];
+        // Make sure user id used belongs to the user that is logged in
+        if (filter._id !== String(req.user._id)) return res.status(400).send('You cannot edit this user\'s info');
 
-            // Remove properties that weren't updated, so user only sees fields they updated
-            Object.keys(updatedUser).forEach(key => {
-                if (!user.hasOwnProperty(key)) delete updatedUser[key];
-            });
-            
-            res.status(201).json(updatedUser);
+        // Find user
+        Users.findOne(filter).then(() => {            
+            Users.findOneAndUpdate(filter, {$set: user}, {new: true }).then((updatedUser) => {
+                // convert document to object so version key property can be removed as user does not need this info
+                updatedUser = updatedUser.toObject();
+                delete updatedUser['__v'];
+
+                // Remove properties that weren't updated, so user only sees fields they updated
+                Object.keys(updatedUser).forEach(key => {
+                    if (!user.hasOwnProperty(key)) delete updatedUser[key];
+                });
+                
+                res.status(201).json(updatedUser);
+            }).catch((err) => {
+                console.error(err); // eslint-disable-line
+                res.status(500).send(err);
+            });        
         }).catch((err) => {
-            console.error(err);
+            console.error(err); // eslint-disable-line
             res.status(500).send(err);
-        });        
-    }).catch((err) => {
-        console.error(err);
-        res.status(500).send(err);
-    });   
-});
+        });   
+    }
+);
+
+/*********** --Editing/getting user's lists ************/
 
 // Get a user's favorite movies list
-app.get('/users/:id/favorite-movies', passport.authenticate('jwt', { session: false }), (req, res) => {  
-    getList(res, Users, {_id: req.params.id}, {favoriteMovies: 1, _id: 0}, 'favoriteMovies');        
+app.get('/users/:id/favorite-movies', passport.authenticate('jwt', { session: false }), (req, res) => { 
+    getList(req, res, Users, {_id: req.params.id}, {favoriteMovies: 1, _id: 0}, 'favoriteMovies');        
 });
 
 // Add a movie to user's favorite movies list
@@ -293,7 +291,7 @@ app.delete('/users/:id/favorite-movies/:movie_id', passport.authenticate('jwt', 
 
 // Get a user's to watch movies list
 app.get('/users/:id/to-watch-movies', passport.authenticate('jwt', { session: false }), (req, res) => {  
-    getList(res, Users, {_id: req.params.id}, {toWatchMovies: 1, _id: 0}, 'toWatchMovies');        
+    getList(req, res, Users, {_id: req.params.id}, {toWatchMovies: 1, _id: 0}, 'toWatchMovies');        
 });
 
 // Add a movie to user's to watch movies list
@@ -308,7 +306,7 @@ app.delete('/users/:id/to-watch-movies/:movie_id', passport.authenticate('jwt', 
 
 // Get a user's favorite actors list
 app.get('/users/:id/favorite-actors', passport.authenticate('jwt', { session: false }), (req, res) => {  
-    getList(res, Users, {_id: req.params.id}, {actors: 1, _id: 0}, 'favoriteActors');        
+    getList(req, res, Users, {_id: req.params.id}, {actors: 1, _id: 0}, 'favoriteActors');        
 });
 
 // Add an actor to user's favorite actors list
@@ -321,7 +319,7 @@ app.delete('/users/:id/favorite-actors/:actor_id', passport.authenticate('jwt', 
     editList(req, res, 'favoriteActors', 'actor_id', 'remove', Users);  
 });
 
-app.listen(port, '0.0.0.0',(err) => {
-    console.log('Listening on Port ' + port);
+app.listen(port, '0.0.0.0',() => {
+    console.log('Listening on Port ' + port); // eslint-disable-line
 });
 
