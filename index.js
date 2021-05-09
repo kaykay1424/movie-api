@@ -15,8 +15,8 @@ const { check, validationResult} = require('express-validator'),
 dotenv.config({path: __dirname + '/.env'});
 
 const port = process.env.PORT || 8080,
-    environment = process.env.NODE_ENV || 'local',
-    dbURL = environment === 'local' ? process.env.MONGO_DB_LOCAL_URI : process.env.MONGO_DB_REMOTE_URI;
+    environment = process.env.NODE_ENV || 'development',
+    dbURL = environment === 'development' ? process.env.MONGO_DB_DEVELOPMENT_URI : process.env.MONGO_DB_PRODUCTION_URI;
 
 /********** Helper functions **********/
 
@@ -58,7 +58,7 @@ require('./passport');
 /*********** Routes ***********/
 
 app.get('/',(req, res) => {
-    res.status(200).send('Welcome to the Movies API');
+    res.status(200).send('Welcome to the myFlix API');
 });
 
 /*********** -Actors ***********/
@@ -231,6 +231,9 @@ app.delete('/users/:id', passport.authenticate('jwt', { session: false }), (req,
 
 // Get user's info
 app.get('/users/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+    // Make sure user id used belongs to the user that is logged in
+    if (req.params.id !== String(req.user._id)) return res.status(400).send('You cannot edit this user\'s info');
+    
     findRecord(res, Users, {_id: req.params.id});            
 });
 
