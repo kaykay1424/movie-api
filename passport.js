@@ -15,8 +15,8 @@ const Users = Models.User,
      
 // HTTP authentication
 passport.use(new LocalStrategy({
-    usernameField: 'Username',
-    passwordField: 'Password'
+    usernameField: 'username',
+    passwordField: 'password'
 }, (username, password, callback) => {
     console.log(username + '  ' + password); // eslint-disable-line
     Users.findOne({username}, (error, user) => {
@@ -27,7 +27,8 @@ passport.use(new LocalStrategy({
     
         if (!user) {
             console.log('incorrect username'); // eslint-disable-line
-            return callback(null, false, {message: 'Incorrect username or password.'});
+            return callback(null, false,
+                {message: 'Incorrect username or password.'});
         }
 
         if (!user.validatePassword(password)) {

@@ -36,8 +36,8 @@ const actorSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    occupations: [{ type: String}],
-    starsIn: [{ type: String}]
+    occupations: [{type: String}],
+    starsIn: [{type: String}]
 });
 
 const movieSchema = mongoose.Schema({
