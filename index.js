@@ -106,7 +106,7 @@ app.get(
 // Get a list of all movies 
 app.get(
     '/movies', 
-    passport.authenticate('jwt', {session: false}), 
+    // passport.authenticate('jwt', {session: false}), 
     (req, res) => {
     // sorting query params: rating, releaseYear, featured
     // /movies?rating=-1 sort movies by rating in descending order
@@ -121,6 +121,7 @@ app.get(
                 .status(400)
                 .send(`Please use a value of 1 (ascending order) 
                 or -1 (descending order) for each query parameter`);
+        
         findRecords(Movie, {}, {}, req.query)
             .then(movies => res.status(200).json(movies),
                 err => res.status(err.status || 500).send(err.message || err)
