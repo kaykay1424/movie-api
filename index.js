@@ -106,7 +106,7 @@ app.get(
 // Get a list of all movies 
 app.get(
     '/movies', 
-    // passport.authenticate('jwt', {session: false}), 
+    passport.authenticate('jwt', {session: false}), 
     (req, res) => {
     // sorting query params: rating, releaseYear, featured
     // /movies?rating=-1 sort movies by rating in descending order
