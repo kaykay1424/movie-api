@@ -18,21 +18,17 @@ passport.use(new LocalStrategy({
     usernameField: 'username',
     passwordField: 'password'
 }, (username, password, callback) => {
-    console.log(username + '  ' + password); // eslint-disable-line
     Users.findOne({username}, (error, user) => {
         if (error) {
-            console.log(error); // eslint-disable-line
             return callback(error);
         }
     
         if (!user) {
-            console.log('incorrect username'); // eslint-disable-line
             return callback(null, false,
                 {message: 'Incorrect username or password.'});
         }
 
         if (!user.validatePassword(password)) {
-            console.log('incorrect password'); // eslint-disable-line
             return callback(null, false, {message: 'Incorrect password.'});
         }
     

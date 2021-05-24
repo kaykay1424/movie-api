@@ -51,7 +51,6 @@ app.use(morgan('common')); // log requests
 app.use(express.static('public')); // serve static files in public folder
 // Error handler
 app.use((err, req, res, next) => { // eslint-disable-line
-    console.log(err.stack); // eslint-disable-line
     res.status(500).send('An error has ocurred!');
 });
 
@@ -342,11 +341,14 @@ app.patch('/users/:id', // Validation logic
     
         const user = req.body,
             filter = {_id: req.params.id};
-
+            
         // Make sure user id used belongs to the user that is logged in
         if (filter._id !== String(req.user._id)) 
             return res.status(400).send('You cannot edit this user\'s info');
 
+        // if password has been supplied in body request, hash it    
+        if (user.password) user.password = User.hashPassword(user.password);    
+        
         // Find user
         User.findOne(filter).then(() => {            
             User.findOneAndUpdate(filter, {$set: user}, {new: true})
