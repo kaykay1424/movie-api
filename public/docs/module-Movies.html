@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Module: Movies</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Module: Movies</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~get"><span class="type-signature">(inner) </span>get<span class="signature">(routePath, passportAuth, routeHandler)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Get a list of all movies
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>routePath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Path to which request is made <br />
+<b>Path:</b> /movies 
+<table>
+ <tr>
+     <th>Query Params</th>
+     <th>Accepted Values</th>
+     <th>Function</th>
+     <th>Example</th>
+ </tr>
+ <tr>
+     <td>rating (optional)</td>
+     <td>
+         1 (ASC)</br>
+         -1 (DESC)</li>
+     </td>
+     <td>sort movies by rating in ascending or descending order</td>
+     <td>/movies?rating=-1</td>
+  </tr>
+ <tr>
+     <td>releaseYear (optional)</td>
+     <td>
+         1 (ASC)</br>
+         -1 (DESC)</li>
+     </td>
+     <td>sort movies by releaseYear in ascending or descending order</td>
+     <td>/movies?releaseYear=-1</td>
+    </tr>
+ <tr>
+     <td>featured (optional)</td>
+     <td>
+         1 (true)</br>
+         -1 (false)</li>
+     </td>
+     <td>sort movies by featured status</td>
+     <td>/movies?featured=-1</td>
+ </tr>
+</table></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>passportAuth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">middleware</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Middleware to authenticate user <br />
+Authorization token required in request header</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>routeHandler</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Callback to handle request and send response to user <br />
+<b>Response Type:</b> array<br />
+<b>Response Format:</b> json <br />
+<b>Response Example:</b><br />
+<code>[
+        {   
+        description: 'lorem ipsum',
+        director: {
+            bio: 'lorem ipsum',
+            birth_year: 1954,
+            death_year: null,
+            name: 'lorem ipsum
+        },
+        featured: true,
+        genre: {
+            description: 'lorem ipsum',
+            name: 'lorem ipsum'
+        },
+        image: 'image',
+        imdbLink: 'link',
+        name: 'lorem ipsum'
+    },
+    {   
+        description: 'lorem ipsum',
+      director: {
+            bio: 'lorem ipsum',
+            birth_year: 1954,
+            death_year: null,
+            name: 'lorem ipsum
+        },
+        featured: true,
+        genre: {
+            description: 'lorem ipsum',
+            name: 'lorem ipsum'
+        },
+        image: 'image',
+        imdbLink: 'link',
+        name: 'lorem ipsum'
+    },
+    {   
+        description: 'lorem ipsum',
+        director: {
+            bio: 'lorem ipsum',
+            birth_year: 1954,
+            death_year: null,
+            name: 'lorem ipsum
+        },
+        featured: true,
+        genre: {
+            description: 'lorem ipsum',
+            name: 'lorem ipsum'
+        },
+        image: 'image',
+        imdbLink: 'link',
+        name: 'lorem ipsum'
+    }
+      
+]</code></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line199">line 199</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~get"><span class="type-signature">(inner) </span>get<span class="signature">(routePath, passportAuth, routeHandler)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Get a list of featured movies
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>routePath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Path to which request is made <br />
+<b>Path:</b> /featured-movies</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>passportAuth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">middleware</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Middleware to authenticate user <br />
+Authorization token required in request header</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>routeHandler</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Callback to handle request and send response to user <br />
+<b>Response Type:</b> array<br />
+<b>Response Format:</b> json <br />
+<b>Response Example:</b><br />
+<code>[ "Avatar", "Titanic", "Avengers: End Game", "Coming 2 America", "The Lion King" ]</code></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line320">line 320</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~get"><span class="type-signature">(inner) </span>get<span class="signature">(routePath, passportAuth, routeHandler)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Get movies favorited by users
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>routePath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Path to which request is made<br /> 
+<b>Path:</b> /favorite-movies</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>passportAuth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">middleware</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Middleware to authenticate user <br />
+Authorization token required in request header</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>routeHandler</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Callback to handle request and send response to user <br />
+<b>Response Type:</b> array<br />
+<b>Response Format:</b> json <br />
+<b>Response Example:</b><br />
+<code>[ { "name": "Toy Story", "usersFavorited": 3 }, { "name": "Titanic", "usersFavorited": 2 }, { "name": "Avatar", "usersFavorited": 2 }</code></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line347">line 347</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~get"><span class="type-signature">(inner) </span>get<span class="signature">(routePath, passportAuth, routeHandler)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Get a single movie by name
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>routePath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Path to which request is made <br />
+<b>Path:</b> /movies/:name 
+<table>
+ <tr>
+     <th>Path params</th>
+     <th>Accepted Values</th>
+     <th>Function</th>
+     <th>Example</th>
+ </tr>
+   <tr>
+     <td>name (required, case-sensitive)</td>
+     <td>
+         any
+     </td>
+     <td>get movie by name</td>
+     <td>/movies/Avatar</td>
+ </tr>
+</table></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>passportAuth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">middleware</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Middleware to authenticate user <br />
+Authorization token required in request header</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>routeHandler</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Callback to handle request and send response to user <br />
+<b>Response Type:</b> array<br />
+<b>Response Format:</b> json <br />
+<b>Response Example:</b><br />
+<code>{   
+    description: 'lorem ipsum',
+    director: {
+        bio: 'lorem ipsum',
+        birth_year: 1954,
+        death_year: null,
+        name: 'lorem ipsum
+    },
+    featured: true,
+    genre: {
+        description: 'lorem ipsum',
+        name: 'lorem ipsum'
+    },
+    image: 'image',
+    imdbLink: 'link',
+    name: 'lorem ipsum'
+}</code></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line400">line 400</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~get"><span class="type-signature">(inner) </span>get<span class="signature">(routePath, passportAuth, routeHandler)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Get stars of a movie by movie name
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>routePath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Path to which request is made <br />
+<b>Path:</b> /movies/:name/stars 
+<table>
+ <tr>
+     <th>Query Params</th>
+     <th>Accepted Values</th>
+     <th>Function</th>
+     <th>Example</th>
+ </tr>
+   <tr>
+     <td>name (required, case-sensitive)</td>
+     <td>
+         any
+     </td>
+     <td>get stars of movie by name (of movie)</td>
+     <td>/movies/Avatar</td>
+ </tr>
+</table></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>passportAuth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">middleware</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Middleware to authenticate user <br />
+Authorization token required in request header</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>routeHandler</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Callback to handle request and send response to user <br />
+<b>Response Type:</b> array<br />
+<b>Response Format:</b> json <br />
+<b>Response Example:</b> <br />
+<code>[ { "actor": "Sam Worthington", "character": "Jake Sully" }, { "actor": "Zoe Saldana", "character": "Neytiri" }, { "actor": "Sigourney Weaver", "character": "Dr. Grace Augustine" } ]</code></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line456">line 456</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Actors.html">Actors</a></li><li><a href="module-Directors.html">Directors</a></li><li><a href="module-Genres.html">Genres</a></li><li><a href="module-Movies.html">Movies</a></li><li><a href="module-Users.html">Users</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Aug 27 2021 15:44:09 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
